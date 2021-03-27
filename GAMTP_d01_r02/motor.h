@@ -1,4 +1,11 @@
 //motor.h
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include "driver_init.h"
+
 //***NOTE THIS FIRMWARE SUPPORTS the Eth_Motors_DRV8800_rev02 PCB
 #define MAX_NUM_MOTORS 16//20 //Maximum number of motors this MCU can control
 //made duty cycle 10ms because <=2ms is too much and mcu gets sys exception
@@ -52,3 +59,7 @@ typedef struct {
     uint8_t	Inst[3];  //Motor Instruction (3 uint8_ts) uint8_t1=motor#,direction,strength + uint8_t2=duration(little endian)
 } StoredInstructions;
 #endif
+
+void MotorTimer_Initialize(void);
+void SendMotorInst(uint8_t *MInst);
+int InitializeMotors(void);

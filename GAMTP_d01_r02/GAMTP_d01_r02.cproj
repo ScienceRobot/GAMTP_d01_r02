@@ -140,7 +140,7 @@
           <AcmeProjectActionInfo Action="File" Source="stdio_redirect/stdio_io.c" IsConfig="false" Hash="Nx8PfIAymK/f5AjLql/CyQ" />
           <AcmeProjectActionInfo Action="File" Source="stdio_redirect/stdio_io.h" IsConfig="false" Hash="4X02f8UL8cjBHeGJM3BnHw" />
           <AcmeProjectActionInfo Action="File" Source="main.c" IsConfig="false" Hash="k0AH7j+BrmdFhBPzCCMptA" />
-          <AcmeProjectActionInfo Action="File" Source="driver_init.c" IsConfig="false" Hash="9h18m7oWxjqChhyXOP2tZQ" />
+          <AcmeProjectActionInfo Action="File" Source="driver_init.c" IsConfig="false" Hash="AXq3FFlTHAGbOA5jDEuPnA" />
           <AcmeProjectActionInfo Action="File" Source="driver_init.h" IsConfig="false" Hash="RChnBE3C0x8qxORJ+7G6Dw" />
           <AcmeProjectActionInfo Action="File" Source="atmel_start_pins.h" IsConfig="false" Hash="bX2DtVj85Viz/IV0fnPusw" />
           <AcmeProjectActionInfo Action="File" Source="examples/driver_examples.h" IsConfig="false" Hash="i7N+5QjDPK/e+DH2yrjGLQ" />
@@ -462,6 +462,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="accel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="accel.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="atmel_start.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1296,6 +1302,24 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="main.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MPU6050.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="robot_accelmagtouchgps_mcu_instructions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="robot_motor_mcu_instructions.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="stdio_redirect\gcc\read.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1312,6 +1336,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="stdio_start.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="udpserver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="udpserver.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
