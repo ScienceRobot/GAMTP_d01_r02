@@ -5,6 +5,9 @@
 #include <hal_gpio.h>
 #include <hal_delay.h>
 #include <hal_timer.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "robot_motor_mcu_instructions.h"
 
 static struct timer_task MotorTimerTask;
@@ -202,7 +205,7 @@ void SendMotorInst(uint8_t *MInst)
     Motor[MotorNum].DurationCount=0;
 
 	//start Motor PWM timer if not started already
-	if (!_timer_is_started(&TIMER_0)) {
+	if (!_timer_is_started(&TIMER_0.device)) {
 		timer_start(&TIMER_0);
 	}
 	
@@ -221,7 +224,7 @@ int InitializeMotors(void)
 	
 	NumMotors=16;
 	//Clear the robot status array
-	memset(Motor,sizeof(MotorStatus)*NumMotors,0);
+	memset(Motor,0,sizeof(MotorStatus)*NumMotors);
 
 	//Motor[0].flags|=MOTOR_DRIVER_USES_PULSE_PIN;
 	Motor[0].DirPin=GPIO(GPIO_PORTB, 13);

@@ -12,12 +12,12 @@
   <armgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\arm\CMSIS\5.4.0\CMSIS\Core\Include\</Value>
-      <Value>../lwip/lwip-1.4.0/src/include</Value>
       <Value>..</Value>
-      <Value>../lwip/lwip-1.4.0/port/include</Value>
-      <Value>../lwip/lwip-1.4.0/src/include/ipv4/lwip</Value>
-      <Value>../lwip/lwip-1.4.0/src/include/ipv4</Value>
       <Value>../lwip/lwip-1.4.0/port</Value>
+      <Value>../lwip/lwip-1.4.0/port/include</Value>
+      <Value>../lwip/lwip-1.4.0/src/include</Value>
+      <Value>../lwip/lwip-1.4.0/src/include/ipv4</Value>
+      <Value>../lwip/lwip-1.4.0/src/include/ipv4/lwip</Value>
       <Value>../Config</Value>
       <Value>../examples</Value>
       <Value>../hal/include</Value>

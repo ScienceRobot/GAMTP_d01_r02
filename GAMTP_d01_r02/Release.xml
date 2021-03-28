@@ -12,6 +12,11 @@
   <armgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\arm\CMSIS\5.4.0\CMSIS\Core\Include\</Value>
+      <Value>../lwip/lwip-1.4.0/src/include</Value>
+      <Value>../lwip/lwip-1.4.0/src/include/ipv4</Value>
+      <Value>../lwip/lwip-1.4.0/src/include/ipv4/lwip</Value>
+      <Value>../lwip/lwip-1.4.0/port</Value>
+      <Value>../lwip/lwip-1.4.0/port/include</Value>
       <Value>../Config</Value>
       <Value>../</Value>
       <Value>../examples</Value>
@@ -52,6 +57,7 @@
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
   <armgcc.linker.miscellaneous.LinkerFlags>-Tsame53n20a_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.general.IncludePaths>
     <ListValues>

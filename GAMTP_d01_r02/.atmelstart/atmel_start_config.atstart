@@ -191,11 +191,11 @@ drivers:
       domain_group:
         nodes:
         - name: ADC
-          input: Generic clock generator 0
+          input: Generic clock generator 2
           external: false
           external_frequency: 0
         configuration:
-          adc_gclk_selection: Generic clock generator 0
+          adc_gclk_selection: Generic clock generator 2
   CMCC:
     user_label: CMCC
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::CMCC::driver_config_definition::CMCC::HAL:HPL:CMCC
@@ -779,7 +779,7 @@ drivers:
       enable_gclk_gen_11__externalclock: 1000000
       enable_gclk_gen_1__externalclock: 1000000
       enable_gclk_gen_2: true
-      enable_gclk_gen_2__externalclock: 1000000
+      enable_gclk_gen_2__externalclock: 12000000
       enable_gclk_gen_3: true
       enable_gclk_gen_3__externalclock: 1000000
       enable_gclk_gen_4: true
@@ -961,13 +961,13 @@ drivers:
     functionality: System
     api: HAL:HPL:OSCCTRL
     configuration:
-      $input: 32768
-      $input_id: 32kHz External Crystal Oscillator (XOSC32K)
-      RESERVED_InputFreq: 32768
-      RESERVED_InputFreq_id: 32kHz External Crystal Oscillator (XOSC32K)
+      $input: 2000000
+      $input_id: Generic clock generator 1
+      RESERVED_InputFreq: 2000000
+      RESERVED_InputFreq_id: Generic clock generator 1
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
       _$freq_output_Digital Phase Locked Loop (DPLL0): 120000000
-      _$freq_output_Digital Phase Locked Loop (DPLL1): 47985664
+      _$freq_output_Digital Phase Locked Loop (DPLL1): 4000000
       _$freq_output_External Crystal Oscillator 8-48MHz (XOSC0): 12000000
       _$freq_output_External Crystal Oscillator 8-48MHz (XOSC1): 12000000
       dfll_arch_bplckc: false
@@ -1013,14 +1013,14 @@ drivers:
       fdpll1_arch_lbypass: false
       fdpll1_arch_ltime: No time-out, automatic lock
       fdpll1_arch_ondemand: false
-      fdpll1_arch_refclk: XOSC32K clock reference
+      fdpll1_arch_refclk: XOSC0 clock reference
       fdpll1_arch_runstdby: false
       fdpll1_arch_wuf: false
       fdpll1_clock_dcofilter: 0
-      fdpll1_clock_div: 0
-      fdpll1_ldr: 1463
-      fdpll1_ldrfrac: 13
-      fdpll1_ref_clock: 32kHz External Crystal Oscillator (XOSC32K)
+      fdpll1_clock_div: 1
+      fdpll1_ldr: 1
+      fdpll1_ldrfrac: 0
+      fdpll1_ref_clock: Generic clock generator 1
       xosc0_arch_cfden: false
       xosc0_arch_enable: true
       xosc0_arch_enalc: false
@@ -1184,7 +1184,7 @@ drivers:
       domain_group:
         nodes:
         - name: Core
-          input: Generic clock generator 0
+          input: Generic clock generator 2
           external: false
           external_frequency: 0
         - name: Slow
@@ -1192,7 +1192,7 @@ drivers:
           external: false
           external_frequency: 0
         configuration:
-          core_gclk_selection: Generic clock generator 0
+          core_gclk_selection: Generic clock generator 2
           slow_gclk_selection: Generic clock generator 2
   USART_1:
     user_label: USART_1
@@ -1486,6 +1486,108 @@ pads:
     mode: Analog
     user_label: PB05
     configuration: null
+  PB06:
+    name: PB06
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB06
+    mode: Digital output
+    user_label: PB06
+    configuration: null
+  PB07:
+    name: PB07
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB07
+    mode: Digital output
+    user_label: PB07
+    configuration: null
+  PB08:
+    name: PB08
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB08
+    mode: Digital output
+    user_label: PB08
+    configuration: null
+  PB09:
+    name: PB09
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB09
+    mode: Digital output
+    user_label: PB09
+    configuration: null
+  PA04:
+    name: PA04
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA04
+    mode: Digital output
+    user_label: PA04
+    configuration: null
+  PA05:
+    name: PA05
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA05
+    mode: Digital output
+    user_label: PA05
+    configuration: null
+  PA06:
+    name: PA06
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA06
+    mode: Digital output
+    user_label: PA06
+    configuration: null
+  PA07:
+    name: PA07
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA07
+    mode: Digital output
+    user_label: PA07
+    configuration: null
+  PA08:
+    name: PA08
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA08
+    mode: Digital output
+    user_label: PA08
+    configuration: null
+  PA09:
+    name: PA09
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA09
+    mode: Digital output
+    user_label: PA09
+    configuration: null
+  PA10:
+    name: PA10
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA10
+    mode: Digital output
+    user_label: PA10
+    configuration: null
+  PA11:
+    name: PA11
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA11
+    mode: Digital output
+    user_label: PA11
+    configuration: null
+  PB10:
+    name: PB10
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB10
+    mode: Digital output
+    user_label: PB10
+    configuration: null
+  PB11:
+    name: PB11
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB11
+    mode: Digital output
+    user_label: PB11
+    configuration: null
+  PB12:
+    name: PB12
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB12
+    mode: Digital output
+    user_label: PB12
+    configuration: null
+  PB13:
+    name: PB13
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB13
+    mode: Digital output
+    user_label: PB13
+    configuration: null
+  PB14:
+    name: PB14
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB14
+    mode: Digital output
+    user_label: PB14
+    configuration: null
   PC11:
     name: PC11
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC11
@@ -1497,6 +1599,12 @@ pads:
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC12
     mode: Peripheral IO
     user_label: PC12
+    configuration: null
+  PC14:
+    name: PC14
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC14
+    mode: Digital output
+    user_label: PC14
     configuration: null
   PA12:
     name: PA12
@@ -1552,11 +1660,71 @@ pads:
     mode: Peripheral IO
     user_label: PC17
     configuration: null
+  PC18:
+    name: PC18
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC18
+    mode: Digital output
+    user_label: PC18
+    configuration: null
+  PC19:
+    name: PC19
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC19
+    mode: Digital output
+    user_label: PC19
+    configuration: null
   PC20:
     name: PC20
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC20
     mode: Peripheral IO
     user_label: PC20
+    configuration: null
+  PB16:
+    name: PB16
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB16
+    mode: Digital output
+    user_label: PB16
+    configuration: null
+  PB17:
+    name: PB17
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB17
+    mode: Digital output
+    user_label: PB17
+    configuration: null
+  PB18:
+    name: PB18
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB18
+    mode: Digital output
+    user_label: PB18
+    configuration: null
+  PB19:
+    name: PB19
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB19
+    mode: Digital output
+    user_label: PB19
+    configuration: null
+  PB20:
+    name: PB20
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB20
+    mode: Digital output
+    user_label: PB20
+    configuration: null
+  PB21:
+    name: PB21
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB21
+    mode: Digital output
+    user_label: PB21
+    configuration: null
+  PA20:
+    name: PA20
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA20
+    mode: Digital output
+    user_label: PA20
+    configuration: null
+  PA21:
+    name: PA21
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA21
+    mode: Digital output
+    user_label: PA21
     configuration: null
   PA22:
     name: PA22
@@ -1570,6 +1738,42 @@ pads:
     mode: I2C
     user_label: PA23
     configuration: null
+  PA24:
+    name: PA24
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA24
+    mode: Digital output
+    user_label: PA24
+    configuration: null
+  PA25:
+    name: PA25
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PA25
+    mode: Digital output
+    user_label: PA25
+    configuration: null
+  PB24:
+    name: PB24
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB24
+    mode: Digital output
+    user_label: PB24
+    configuration: null
+  PB25:
+    name: PB25
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB25
+    mode: Digital output
+    user_label: PB25
+    configuration: null
+  PC24:
+    name: PC24
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC24
+    mode: Digital output
+    user_label: PC24
+    configuration: null
+  PC25:
+    name: PC25
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC25
+    mode: Digital output
+    user_label: PC25
+    configuration: null
   PC27:
     name: PC27
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC27
@@ -1581,5 +1785,29 @@ pads:
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PC28
     mode: Peripheral IO
     user_label: PC28
+    configuration: null
+  PB00:
+    name: PB00
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB00
+    mode: Digital output
+    user_label: PB00
+    configuration: null
+  PB01:
+    name: PB01
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB01
+    mode: Digital output
+    user_label: PB01
+    configuration: null
+  PB02:
+    name: PB02
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB02
+    mode: Digital output
+    user_label: PB02
+    configuration: null
+  PB03:
+    name: PB03
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::pad::PB03
+    mode: Digital output
+    user_label: PB03
     configuration: null
 toolchain_options: []

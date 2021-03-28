@@ -9,6 +9,8 @@
 #include <atmel_start.h>
 #include <ieee8023_mii_standard_config.h>
 #include <ethernet_phy_main.h>
+#include <atmel_start_pins.h>
+
 
 struct ethernet_phy_descriptor ETHERNET_PHY_0_desc;
 

@@ -15,10 +15,11 @@
 #include <hpl_adc_base.h>
 
 /*! The buffer size for USART */
-#define USART_1_BUFFER_SIZE 16
+#define USART_1_BUFFER_SIZE 256 //tph 16
 
 struct usart_async_descriptor USART_1;
 struct timer_descriptor       TIMER_0;
+struct timer_descriptor       TIMER_1;
 
 static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
@@ -220,6 +221,19 @@ static void TIMER_0_init(void)
 	timer_init(&TIMER_0, TC0, _tc_get_timer());
 }
 
+/**
+ * \brief Timer initialization function
+ *
+ * Enables Timer peripheral, clocks and initializes Timer driver
+ */
+static void TIMER_1_init(void)
+{
+	hri_mclk_set_APBAMASK_TC1_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, TC1_GCLK_ID, CONF_GCLK_TC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+
+	timer_init(&TIMER_1, TC1, _tc_get_timer());
+}
+
 void ETHERNET_MAC_0_PORT_init(void)
 {
 
@@ -277,5 +291,6 @@ void system_init(void)
 	USART_1_init();
 
 	TIMER_0_init();
+	TIMER_1_init();
 	ETHERNET_MAC_0_init();
 }

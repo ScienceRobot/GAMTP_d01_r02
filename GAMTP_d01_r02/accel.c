@@ -4,6 +4,7 @@
 #include "accel.h"
 //#include "app.h" //for delay_ms, ReadCoreTimer
 #include "MPU6050.h"
+#include <stdio.h>  //for printf
 #include <hal_gpio.h>
 #include <hal_delay.h>
 #include <hal_timer.h>
