@@ -9,6 +9,8 @@
 #include <lwip/udp.h>
 #include <lwip/timers.h>
 #include <lwip_demo_config.h>
+#include <ethif_mac.h>
+#include <eth_ipstack_main.h>
 #include <stdio.h>
 #include <string.h>
 #include <udpserver.h>
@@ -398,10 +400,13 @@ int CheckWired(void) {
 	//Set callback function for link status change
 	netif_set_link_callback(&LWIP_MACIF_desc, link_callback);
 		
-	mac_async_enable(&ETHERNET_MAC_0);
+	mac_async_enable(&ETHERNET_MAC_0);  //already done in ETHERNET_PHY_0_init
+//	mac_async_enable_irq(&ETHERNET_MAC_0);
+	//mac_async_write(&ETHERNET_MAC_0, (uint8_t *)"Hello World!", 12);
 
 	udpserver_pcb = udp_new();  //create udp server
-	udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr.addr, UDP_PORT);   //port UDP_PORT 
+	//udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr.addr, UDP_PORT);   //port UDP_PORT 
+	udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr, UDP_PORT);   //port UDP_PORT 
 	udp_recv(udpserver_pcb, udpserver_recv, NULL);  //set udpserver callback function
 
 	//bring up the network interface - ned to do here so above interrupts are enabled
@@ -495,50 +500,6 @@ int main(void)
 
 
 	CheckWired();
-
-#if 0 	
-	eth_ipstack_init();
-	do {
-		ret = ethernet_phy_get_link_status(&ETHERNET_PHY_0_desc, &link_up);
-		if (ret == ERR_NONE && link_up) {
-			break;
-		}
-	} while (true);
-	printf("Ethernet Connection established\n");
-	LWIP_MACIF_init(mac);  //tph: add LWIP callback for recvd input: ethernet_input()
-
-	//make this the default interface
-	netif_set_default(&LWIP_MACIF_desc);
-	
-	// Set callback function for netif status change 
-	netif_set_status_callback(&LWIP_MACIF_desc, status_callback);
-
-	//Set callback function for link status change
-	netif_set_link_callback(&LWIP_MACIF_desc, link_callback);
-
-		
-	mac_async_enable(&ETHERNET_MAC_0);
-
-	udpserver_pcb = udp_new();  //create udp server
-	udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr.addr, UDP_PORT);   //port UDP_PORT 
-	udp_recv(udpserver_pcb, udpserver_recv, NULL);  //set udpserver callback function
-
-
-	//bring up the network interface - ned to do here so above interrupts are enabled
-#ifdef LWIP_DHCP
-	/* DHCP mode. */
-	if (ERR_OK != dhcp_start(&LWIP_MACIF_desc)) {
-		LWIP_ASSERT("ERR_OK != dhcp_start", 0);
-	}
-	printf("DHCP Started\r\n");
-#else
-	//needed for lwip 2.0: netif_set_link_up(&LWIP_MACIF_desc);
-	/* Static mode. */
-	netif_set_up(&LWIP_MACIF_desc);
-	printf("Static IP Address Assigned\r\n");
-#endif
-
-#endif
 
 	InitializeMotors(); //set initial settings of all motors
 	InitializeAccels(); //set initial settings of all accelerometers

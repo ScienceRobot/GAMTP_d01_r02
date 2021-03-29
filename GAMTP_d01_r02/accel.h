@@ -94,4 +94,5 @@ uint8_t ConfigureAccelerometers(uint16_t mask,uint32_t flags,uint16_t Threshold)
 uint8_t Get_Accelerometer_Samples(void);
 uint8_t SendTimerUDPPacket(void);
 uint8_t InitializeAccels(void);
+void AccelTimer_Initialize(void);
 #endif // _ACCEL_H
