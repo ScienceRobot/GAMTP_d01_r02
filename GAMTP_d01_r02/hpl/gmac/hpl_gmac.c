@@ -246,6 +246,32 @@ int32_t _mac_async_write(struct _mac_async_device *const dev, uint8_t *buf, uint
 	uint32_t blen;
 	uint32_t i;
 
+
+//#if 0
+volatile uint32_t imr,isr,ier,ncr,ncfgr,ur,rsr,dcfgr,nsr,tsr;
+//read GMAC interrupt mask register to confirm which interrupts are enabled (=0, RCOMP: receive complete= bit1)
+imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register  0x3fffff7d  0=(management frame sent), 1=rx complete, 7=tx complete, 18-20 MDC CLK division (4) /64
+//120,000,000/64=1,875,000  1.875mhz (must not exceed 2.5mhz)
+isr=hri_gmac_read_ISR_reg(GMAC);  //interrupt status register
+//isr 0=management frame sent, 1=rx complete, 2=tx user bit read, 3=tx used bit read
+//4=tx under, 5=rety exceeded, 6=tx frame corrupt, 7=tx complete, 10=rx overrun, 
+//ier=hri_gmac_read_IER_reg(GMAC);  //write only interrupt enabled register
+ncr=hri_gmac_read_NCR_reg(GMAC);  //network control register 0x0001000c 2=rx enable, 3=tx enable 1enable PFC priority=based pause reception
+ncfgr=hri_gmac_read_NCFGR_reg(GMAC);  //network configuration register 0x00100103 0=speed 1-100mbit, 1=full duplex, 8= 1536 max frame size, 
+ur=hri_gmac_read_UR_reg(GMAC);  //user register - bit 0=0 for RMII  0 
+dcfgr=hri_gmac_read_DCFGR_reg(GMAC);  //DMA Configuration register  0x00020704: 4:0 fixed burst length (4 is default),
+// 10 tx packet buffer memory select (1=fully configured addressable space 4k bytes) used), 
+// 11 tx checksum generation offload enable, tx IP, TCP and UDP checksum generation offload enable
+//23:16 DMA rx buffer size 0x02=128 bytes
+rsr=hri_gmac_read_RSR_reg(GMAC);  //0x00000000 receive status register -
+//rsr: 0=buffer not avail, 1=frame recd, 2 rx overrun, 3 hresp not ok
+nsr=hri_gmac_read_NSR_reg(GMAC);  //0x00000006  bit 1 and 2  1=MDIO pin input status 2=IDLE, PHY Management Logic Idle
+tsr=hri_gmac_read_TSR_reg(GMAC);  //0x00000000  transmit status register. bit 5 tx complete
+//#endif
+//could test loop back send and receive: set LBL bit in NCR
+
+
+
 	if (_txbuf_descrs[_last_txbuf_index].status.bm.used && !_txbuf_descrs[_last_txbuf_index].status.bm.last_buf) {
 		/* Set used flag from first descriptor to last descriptor,
 		 * as DMA olny set the first used flag */
@@ -449,7 +475,8 @@ int32_t _mac_async_register_callback(struct _mac_async_device *const dev, const 
 		if (func) {
 			hri_gmac_set_IMR_RCOMP_bit(dev->hw);
 		} else {
-			hri_gmac_set_IMR_RCOMP_bit(dev->hw);
+			//tph hri_gmac_set_IMR_RCOMP_bit(dev->hw);
+			hri_gmac_clear_IMR_RCOMP_bit(dev->hw);
 		}
 		break;
 	default:

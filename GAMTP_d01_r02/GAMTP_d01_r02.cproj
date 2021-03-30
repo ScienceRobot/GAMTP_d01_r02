@@ -533,6 +533,15 @@
     <Compile Include="Config\ieee8023_mii_standard_config.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Config\lwipopts.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Config\lwip_demo_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Config\lwip_macif_config.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Config\peripheral_clk_config.h">
       <SubType>compile</SubType>
     </Compile>

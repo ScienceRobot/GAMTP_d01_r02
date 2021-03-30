@@ -409,6 +409,34 @@ int CheckWired(void) {
 	udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr, UDP_PORT);   //port UDP_PORT 
 	udp_recv(udpserver_pcb, udpserver_recv, NULL);  //set udpserver callback function
 
+
+
+//#if 0
+volatile uint32_t imr,isr,ier,ncr,ncfgr,ur,rsr,dcfgr,nsr,tsr;
+//read GMAC interrupt mask register to confirm which interrupts are enabled (=0, RCOMP: receive complete= bit1)
+imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register  0x3fffff7d  0=(management frame sent), 1=rx complete, 7=tx complete, 18-20 MDC CLK division (4) /64
+//120,000,000/64=1,875,000  1.875mhz (must not exceed 2.5mhz)
+isr=hri_gmac_read_ISR_reg(GMAC);  //interrupt status register 0x00000002  (receive complete a frame has been stored in memory)
+//isr 0=management frame sent, 1=rx complete, 2=tx user bit read, 3=tx used bit read
+//4=tx under, 5=rety exceeded, 6=tx frame corrupt, 7=tx complete, 10=rx overrun, 
+//ier=hri_gmac_read_IER_reg(GMAC);  //write only interrupt enabled register
+ncr=hri_gmac_read_NCR_reg(GMAC);  //network control register 0x0001000c 2=rx enable, 3=tx enable 1enable PFC priority=based pause reception
+ncfgr=hri_gmac_read_NCFGR_reg(GMAC);  //network configuration register 0x00100103 0=speed 1-100mbit, 1=full duplex, 8= 1536 max frame size, 
+ur=hri_gmac_read_UR_reg(GMAC);  //user register - bit 0=0 for RMII  0 
+dcfgr=hri_gmac_read_DCFGR_reg(GMAC);  //DMA Configuration register  0x00020704: 4:0 fixed burst length (4 is default),
+// 10 tx packet buffer memory select (1=fully configured addressable space 4k bytes) used), 
+// 11 tx checksum generation offload enable, tx IP, TCP and UDP checksum generation offload enable
+//23:16 DMA rx buffer size 0x02=128 bytes
+rsr=hri_gmac_read_RSR_reg(GMAC);  //0x00000000 receive status register -should be 0x0000002, otherwise is problem
+//rsr: 0=buffer not avail, 1=frame recd, 2 rx overrun, 3 hresp not ok
+nsr=hri_gmac_read_NSR_reg(GMAC);  //0x00000006  bit 1 and 2  1=MDIO pin input status 2=IDLE, PHY Management Logic Idle
+tsr=hri_gmac_read_TSR_reg(GMAC);  //0x00000000  transmit status register. bit 5 tx complete
+//#endif
+//could test loop back send and receive: set LBL bit in NCR
+
+
+//mac_async_read(&MACIF, ReadBuffer, 10);
+
 	//bring up the network interface - ned to do here so above interrupts are enabled
 #ifdef LWIP_DHCP
 	/* DHCP mode. */
@@ -422,6 +450,17 @@ int CheckWired(void) {
 	netif_set_up(&LWIP_MACIF_desc);
 	printf("Static IP Address Assigned\r\n");
 #endif
+
+
+//read GMAC interrupt mask register to confirm which interrupts are enabled (=0, RCOMP: receive complete= bit1)
+imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register
+isr=hri_gmac_read_ISR_reg(GMAC);  //interrupt status register
+//isr 0=management frame sent, 1=rx complete, 2=tx user bit read, 3=tx used bit read
+//4=tx under, 5=rety exceeded, 6=tx frame corrupt, 7=tx complete, 10=rx overrun,
+tsr=hri_gmac_read_TSR_reg(GMAC);  //0x00000008  transmit status register. bit 4- txgobit (when dma is txgo variable in tx buf description), 5 tx complete
+
+
+  //  __enable_irq(); 
 
 	return(1);
 
@@ -564,21 +603,6 @@ int main(void)
 //	GMAC_Handler();
 	//mac_async_read(&MACIF, ReadBuffer, 10);
 
-#if 0 
-	volatile uint32_t imr,isr,ier,ncr,ncfgr,ur,rsr,dcfgr,nsr,tsr;
-	//read GMAC interrupt mask register to confirm which interrupts are enabled (=0, RCOMP: receive complete= bit1)
-	imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register
-	isr=hri_gmac_read_ISR_reg(GMAC);  //interrupt status register
-	//ier=hri_gmac_read_IER_reg(GMAC);  //interrupt enabled register
-	ncr=hri_gmac_read_NCR_reg(GMAC);  //network control register
-	ncfgr=hri_gmac_read_NCFGR_reg(GMAC);  //network configuration register
-	ur=hri_gmac_read_UR_reg(GMAC);  //user register - bit 0=0 for RMII
-	dcfgr=hri_gmac_read_DCFGR_reg(GMAC);  //DMA Configuration register 
-	rsr=hri_gmac_read_RSR_reg(GMAC);  //user register - bit 0=0 for RMII
-	nsr=hri_gmac_read_NSR_reg(GMAC);  //bit 1 and 2
-	tsr=hri_gmac_read_TSR_reg(GMAC);  //bit 5 tx complete
-#endif	
-	//could test loop back send and receive: set LBL bit in NCR
 
 
 	USART_1_input();  //check for usart1 input
