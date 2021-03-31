@@ -211,7 +211,10 @@ int32_t _mac_async_init(struct _mac_async_device *const dev, void *const hw)
 	NVIC_DisableIRQ(GMAC_IRQn);
 	NVIC_ClearPendingIRQ(GMAC_IRQn);
 	NVIC_EnableIRQ(GMAC_IRQn);
-
+    uint32_t result= NVIC_GetEnableIRQ(GMAC_IRQn);
+	if (result==0) {
+		NVIC_EnableIRQ(84);
+	}
 	return ERR_NONE;
 }
 

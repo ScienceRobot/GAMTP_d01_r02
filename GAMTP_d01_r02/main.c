@@ -413,6 +413,9 @@ int CheckWired(void) {
 
 //#if 0
 volatile uint32_t imr,isr,ier,ncr,ncfgr,ur,rsr,dcfgr,nsr,tsr;
+hri_gmac_isr_reg_t imr_bits=0x3fffffff;
+hri_gmac_write_IMR_reg(GMAC,imr_bits);
+
 //read GMAC interrupt mask register to confirm which interrupts are enabled (=0, RCOMP: receive complete= bit1)
 imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register  0x3fffff7d  0=(management frame sent), 1=rx complete, 7=tx complete, 18-20 MDC CLK division (4) /64
 //120,000,000/64=1,875,000  1.875mhz (must not exceed 2.5mhz)
@@ -457,6 +460,7 @@ imr=hri_gmac_read_IMR_reg(GMAC);  //interrupt mask register
 isr=hri_gmac_read_ISR_reg(GMAC);  //interrupt status register
 //isr 0=management frame sent, 1=rx complete, 2=tx user bit read, 3=tx used bit read
 //4=tx under, 5=rety exceeded, 6=tx frame corrupt, 7=tx complete, 10=rx overrun,
+
 tsr=hri_gmac_read_TSR_reg(GMAC);  //0x00000008  transmit status register. bit 4- txgobit (when dma is txgo variable in tx buf description), 5 tx complete
 
 
