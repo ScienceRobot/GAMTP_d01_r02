@@ -289,8 +289,8 @@ err_t netconn_accept(struct netconn *conn, struct netconn **new_conn)
 
 #if LWIP_SO_RCVTIMEO
 	if (sys_arch_mbox_fetch(&conn->acceptmbox, (void **)&newconn, conn->recv_timeout) == SYS_ARCH_TIMEOUT) {
-		NETCONN_SET_SAFE_ERR(conn, ERR_TIMEOUT);
-		return ERR_TIMEOUT;
+		NETCONN_SET_SAFE_ERR(conn, LWIP_ERR_TIMEOUT);
+		return LWIP_ERR_TIMEOUT;
 	}
 #else
 	sys_arch_mbox_fetch(&conn->acceptmbox, (void **)&newconn, 0);
@@ -355,8 +355,8 @@ static err_t netconn_recv_data(struct netconn *conn, void **new_buf)
 
 #if LWIP_SO_RCVTIMEO
 	if (sys_arch_mbox_fetch(&conn->recvmbox, &buf, conn->recv_timeout) == SYS_ARCH_TIMEOUT) {
-		NETCONN_SET_SAFE_ERR(conn, ERR_TIMEOUT);
-		return ERR_TIMEOUT;
+		NETCONN_SET_SAFE_ERR(conn, LWIP_ERR_TIMEOUT);
+		return LWIP_ERR_TIMEOUT;
 	}
 #else
 	sys_arch_mbox_fetch(&conn->recvmbox, &buf, 0);

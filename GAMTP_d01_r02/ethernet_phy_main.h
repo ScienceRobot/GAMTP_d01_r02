@@ -17,7 +17,7 @@ extern "C" {
 #define PHY_RESET_PIN GPIO(GPIO_PORTB, 14) //36  //pin 36 (PB14) is PHY reset  
 #define PHY_YELLOW_LED_PIN GPIO(GPIO_PORTC, 14)   //44  //pin 44 (PC14) is PHY YELLOW LED  
 
-extern struct ethernet_phy_descriptor ETHERNET_PHY_0_desc;
+struct ethernet_phy_descriptor ETHERNET_PHY_0_desc;
 
 void ethernet_phys_init(void);
 void ETHERNET_PHY_0_example(void);

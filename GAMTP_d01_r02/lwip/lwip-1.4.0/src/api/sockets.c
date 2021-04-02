@@ -136,7 +136,7 @@ static const int err_to_errno_table[] = {
     0,            /* ERR_OK          0      No error, everything OK. */
     ENOMEM,       /* ERR_MEM        -1      Out of memory error.     */
     ENOBUFS,      /* ERR_BUF        -2      Buffer error.            */
-    EWOULDBLOCK,  /* ERR_TIMEOUT    -3      Timeout                  */
+    EWOULDBLOCK,  /* LWIP_ERR_TIMEOUT    -3      Timeout                  */
     EHOSTUNREACH, /* ERR_RTE        -4      Routing problem.         */
     EINPROGRESS,  /* ERR_INPROGRESS -5      Operation in progress    */
     EINVAL,       /* ERR_VAL        -6      Illegal value.           */

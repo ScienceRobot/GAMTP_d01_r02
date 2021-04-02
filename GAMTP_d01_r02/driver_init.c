@@ -669,7 +669,7 @@ void system_init(void)
 	                   false);
 
 	// Set pin direction to output
-	gpio_set_pin_direction(PB18, GPIO_DIRECTION_OUT);
+	//gpio_set_pin_direction(PB18, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(PB18, GPIO_PIN_FUNCTION_OFF);
 
@@ -743,6 +743,19 @@ void system_init(void)
 
 	gpio_set_pin_function(PB25, GPIO_PIN_FUNCTION_OFF);
 
+	// GPIO on PC14
+
+	gpio_set_pin_level(PC14,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PC14, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PC14, GPIO_PIN_FUNCTION_OFF);
 	// GPIO on PC18
 
 	gpio_set_pin_level(PC18,
@@ -756,6 +769,20 @@ void system_init(void)
 	gpio_set_pin_direction(PC18, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(PC18, GPIO_PIN_FUNCTION_OFF);
+
+	// GPIO on PC19
+
+	gpio_set_pin_level(PC19,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PC19, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PC19, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PC24
 

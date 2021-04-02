@@ -52,7 +52,7 @@ typedef s8_t err_t;
 #define ERR_OK 0          /* No error, everything OK. */
 #define ERR_MEM -1        /* Out of memory error.     */
 #define ERR_BUF -2        /* Buffer error.            */
-#define ERR_TIMEOUT -3    /* Timeout.                 */
+#define LWIP_ERR_TIMEOUT -3    /* Timeout.                 */
 #define ERR_RTE -4        /* Routing problem.         */
 #define ERR_INPROGRESS -5 /* Operation in progress    */
 #define ERR_VAL -6        /* Illegal value.           */

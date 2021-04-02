@@ -755,14 +755,14 @@ drivers:
     api: HAL:HPL:GCLK
     configuration:
       $input: 12000000
-      $input_id: External Crystal Oscillator 8-48MHz (XOSC0)
+      $input_id: External Crystal Oscillator 8-48MHz (XOSC1)
       RESERVED_InputFreq: 12000000
-      RESERVED_InputFreq_id: External Crystal Oscillator 8-48MHz (XOSC0)
+      RESERVED_InputFreq_id: External Crystal Oscillator 8-48MHz (XOSC1)
       _$freq_output_Generic clock generator 0: 120000000
-      _$freq_output_Generic clock generator 1: 120000000
+      _$freq_output_Generic clock generator 1: 500000
       _$freq_output_Generic clock generator 10: 12000000
       _$freq_output_Generic clock generator 11: 12000000
-      _$freq_output_Generic clock generator 2: 2000000
+      _$freq_output_Generic clock generator 2: 20000000
       _$freq_output_Generic clock generator 3: 120000000
       _$freq_output_Generic clock generator 4: 100000
       _$freq_output_Generic clock generator 5: 12000000
@@ -779,7 +779,7 @@ drivers:
       enable_gclk_gen_11__externalclock: 1000000
       enable_gclk_gen_1__externalclock: 120000000
       enable_gclk_gen_2: true
-      enable_gclk_gen_2__externalclock: 12000000
+      enable_gclk_gen_2__externalclock: 120000000
       enable_gclk_gen_3: false
       enable_gclk_gen_3__externalclock: 120000000
       enable_gclk_gen_4: true
@@ -863,12 +863,12 @@ drivers:
       gclk_gen_11_div: 1
       gclk_gen_11_div_sel: false
       gclk_gen_11_oscillator: External Crystal Oscillator 8-48MHz (XOSC1)
-      gclk_gen_1_div: 1
+      gclk_gen_1_div: 240
       gclk_gen_1_div_sel: false
       gclk_gen_1_oscillator: Digital Phase Locked Loop (DPLL0)
       gclk_gen_2_div: 6
       gclk_gen_2_div_sel: false
-      gclk_gen_2_oscillator: External Crystal Oscillator 8-48MHz (XOSC1)
+      gclk_gen_2_oscillator: Digital Phase Locked Loop (DPLL0)
       gclk_gen_3_div: 1
       gclk_gen_3_div_sel: false
       gclk_gen_3_oscillator: Digital Phase Locked Loop (DPLL0)
@@ -961,13 +961,13 @@ drivers:
     functionality: System
     api: HAL:HPL:OSCCTRL
     configuration:
-      $input: 12000000
-      $input_id: External Crystal Oscillator 8-48MHz (XOSC1)
-      RESERVED_InputFreq: 12000000
-      RESERVED_InputFreq_id: External Crystal Oscillator 8-48MHz (XOSC1)
+      $input: 500000
+      $input_id: Generic clock generator 1
+      RESERVED_InputFreq: 500000
+      RESERVED_InputFreq_id: Generic clock generator 1
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
       _$freq_output_Digital Phase Locked Loop (DPLL0): 120000000
-      _$freq_output_Digital Phase Locked Loop (DPLL1): 240000000
+      _$freq_output_Digital Phase Locked Loop (DPLL1): 1000000
       _$freq_output_External Crystal Oscillator 8-48MHz (XOSC0): 12000000
       _$freq_output_External Crystal Oscillator 8-48MHz (XOSC1): 12000000
       dfll_arch_bplckc: false
@@ -1148,12 +1148,12 @@ drivers:
           external: false
           external_frequency: 0
         - name: Slow
-          input: Generic clock generator 2
+          input: Generic clock generator 1
           external: false
           external_frequency: 0
         configuration:
           core_gclk_selection: Generic clock generator 2
-          slow_gclk_selection: Generic clock generator 2
+          slow_gclk_selection: Generic clock generator 1
   I2C_0:
     user_label: I2C_0
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::SERCOM3::driver_config_definition::I2C.Master.Standard~2FFast-mode::HAL:Driver:I2C.Master.Sync
@@ -1188,12 +1188,12 @@ drivers:
           external: false
           external_frequency: 0
         - name: Slow
-          input: Generic clock generator 2
+          input: Generic clock generator 1
           external: false
           external_frequency: 0
         configuration:
           core_gclk_selection: Generic clock generator 2
-          slow_gclk_selection: Generic clock generator 2
+          slow_gclk_selection: Generic clock generator 1
   USART_1:
     user_label: USART_1
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::SERCOM6::driver_config_definition::UART::HAL:Driver:USART.Async
@@ -1237,12 +1237,12 @@ drivers:
           external: false
           external_frequency: 0
         - name: Slow
-          input: Generic clock generator 2
+          input: Generic clock generator 1
           external: false
           external_frequency: 0
         configuration:
           core_gclk_selection: Generic clock generator 2
-          slow_gclk_selection: Generic clock generator 2
+          slow_gclk_selection: Generic clock generator 1
   TIMER_0:
     user_label: TIMER_0
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::TC0::driver_config_definition::Timer::HAL:Driver:Timer

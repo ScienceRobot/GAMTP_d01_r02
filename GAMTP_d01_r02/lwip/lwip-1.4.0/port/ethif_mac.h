@@ -40,7 +40,7 @@ extern "C" {
 
 #include <hal_mac_async.h>
 /* Workaround for redefined macro */
-#undef ERR_TIMEOUT
+//#undef ERR_TIMEOUT
 #include <lwip/netif.h>
 
 /**

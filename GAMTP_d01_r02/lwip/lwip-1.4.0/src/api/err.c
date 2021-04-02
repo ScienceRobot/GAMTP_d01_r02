@@ -44,7 +44,7 @@ static const char *err_strerr[] = {
     "Ok.",                    /* ERR_OK          0  */
     "Out of memory error.",   /* ERR_MEM        -1  */
     "Buffer error.",          /* ERR_BUF        -2  */
-    "Timeout.",               /* ERR_TIMEOUT    -3  */
+    "Timeout.",               /* LWIP_ERR_TIMEOUT    -3  */
     "Routing problem.",       /* ERR_RTE        -4  */
     "Operation in progress.", /* ERR_INPROGRESS -5  */
     "Illegal value.",         /* ERR_VAL        -6  */
