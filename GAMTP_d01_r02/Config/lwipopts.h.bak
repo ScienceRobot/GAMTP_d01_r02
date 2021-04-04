@@ -506,8 +506,8 @@
 // <i> Default LWIP_DBG_OFF
 // <id> lwip_api_lib_debug
 #ifndef API_LIB_DEBUG
-#define API_LIB_DEBUG LWIP_DBG_OFF
-//#define API_LIB_DEBUG LWIP_DBG_ON
+//#define API_LIB_DEBUG LWIP_DBG_OFF
+#define API_LIB_DEBUG LWIP_DBG_ON
 #endif
 
 // <y> Pbuf Debug option
@@ -526,8 +526,8 @@
 // <i> Default LWIP_DBG_OFF
 // <id> lwip_api_msg_debug
 #ifndef API_MSG_DEBUG
-#define API_MSG_DEBUG LWIP_DBG_OFF
-//#define API_MSG_DEBUG LWIP_DBG_ON
+//#define API_MSG_DEBUG LWIP_DBG_OFF
+#define API_MSG_DEBUG LWIP_DBG_ON
 #endif
 
 // <y> Socket Debug option
@@ -536,8 +536,8 @@
 // <i> Default LWIP_DBG_OFF
 // <id> lwip_sockets_debug
 #ifndef SOCKETS_DEBUG
-#define SOCKETS_DEBUG LWIP_DBG_OFF
-//#define SOCKETS_DEBUG LWIP_DBG_ON
+//#define SOCKETS_DEBUG LWIP_DBG_OFF
+#define SOCKETS_DEBUG LWIP_DBG_ON
 #endif
 
 // <y> ICMP Debug option
@@ -605,8 +605,8 @@
 // <i> Default LWIP_DBG_OFF
 // <id> lwip_mem_debug
 #ifndef MEM_DEBUG
-#define MEM_DEBUG LWIP_DBG_OFF
-//#define MEM_DEBUG LWIP_DBG_ON
+//#define MEM_DEBUG LWIP_DBG_OFF
+#define MEM_DEBUG LWIP_DBG_ON
 #endif
 
 // <y> MEMP message Debug option
@@ -625,8 +625,8 @@
 // <i> Default LWIP_DBG_OFF
 // <id> lwip_sys_debug
 #ifndef SYS_DEBUG
-#define SYS_DEBUG LWIP_DBG_OFF
-//#define SYS_DEBUG LWIP_DBG_ON
+//#define SYS_DEBUG LWIP_DBG_OFF
+#define SYS_DEBUG LWIP_DBG_ON
 #endif
 
 // <y> Timer message Debug option

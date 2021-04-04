@@ -9,6 +9,8 @@
 #include <atmel_start.h>
 #include <ieee8023_mii_standard_config.h>
 #include <ethernet_phy_main.h>
+#include <atmel_start_pins.h>
+
 
 struct ethernet_phy_descriptor ETHERNET_PHY_0_desc;
 
@@ -33,11 +35,20 @@ void ETHERNET_PHY_0_example(void)
 	/* Wait for PHY link up */
 	do {
 		rst = ethernet_phy_get_link_status(&ETHERNET_PHY_0_desc, &link_state);
-	} while (rst == ERR_NONE && link_state == true);
+	} while (rst == ERR_NONE && link_state == false); //tph true
 }
 
 void ethernet_phys_init(void)
 {
+	//set PHY reset high
+	gpio_set_pin_direction(PHY_RESET_PIN,GPIO_DIRECTION_OUT);
+	gpio_set_pin_level(PHY_RESET_PIN,true);
+	//delay for 100us
+	//set PHY YELLOW LED low
+//not needed to use as regular gpio?	gpio_set_pin_function(PA14, PINMUX_PA18L_GMAC_GTX0);
+
+	gpio_set_pin_direction(PHY_YELLOW_LED_PIN,GPIO_DIRECTION_OUT);
+	gpio_set_pin_level(PHY_YELLOW_LED_PIN,true);
 
 	ETHERNET_PHY_0_init();
 }

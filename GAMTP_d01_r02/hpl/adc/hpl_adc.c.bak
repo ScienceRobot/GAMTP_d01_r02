@@ -110,8 +110,6 @@ static const struct adc_configuration _adcs[] = {
 
 static struct _adc_async_device *_adc0_dev = NULL;
 
-static struct _adc_async_device *_adc1_dev = NULL;
-
 static void _adc_set_reference_source(void *const hw, const adc_reference_t reference);
 
 /**
@@ -157,9 +155,6 @@ static void _adc_init_irq_param(const void *const hw, struct _adc_async_device *
 {
 	if (hw == ADC0) {
 		_adc0_dev = dev;
-	}
-	if (hw == ADC1) {
-		_adc1_dev = dev;
 	}
 }
 
@@ -779,21 +774,6 @@ void ADC0_0_Handler(void)
 void ADC0_1_Handler(void)
 {
 	_adc_interrupt_handler(_adc0_dev);
-}
-
-/**
- * \brief DMAC interrupt handler
- */
-void ADC1_0_Handler(void)
-{
-	_adc_interrupt_handler(_adc1_dev);
-}
-/**
- * \brief DMAC interrupt handler
- */
-void ADC1_1_Handler(void)
-{
-	_adc_interrupt_handler(_adc1_dev);
 }
 
 /**

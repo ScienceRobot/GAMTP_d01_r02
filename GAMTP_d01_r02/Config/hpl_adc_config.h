@@ -106,7 +106,7 @@
 // <i> These bits define the Mux selection for the negative ADC input. (MUXNEG)
 // <id> adc_pinmux_negative
 #ifndef CONF_ADC_0_MUXNEG
-#define CONF_ADC_0_MUXNEG 0x0
+#define CONF_ADC_0_MUXNEG 0x18
 #endif
 
 // </h>
@@ -324,7 +324,7 @@
 // <i> Select the reference for the ADC (REFSEL)
 // <id> adc_reference
 #ifndef CONF_ADC_1_REFSEL
-#define CONF_ADC_1_REFSEL 0x0
+#define CONF_ADC_1_REFSEL 0x3
 #endif
 
 // <o> Prescaler configuration
@@ -383,7 +383,7 @@
 // <i> These bits define the Mux selection for the positive ADC input. (MUXPOS)
 // <id> adc_pinmux_positive
 #ifndef CONF_ADC_1_MUXPOS
-#define CONF_ADC_1_MUXPOS 0x0
+#define CONF_ADC_1_MUXPOS 0x4
 #endif
 
 // <o> Negative Mux Input Selection
@@ -399,7 +399,7 @@
 // <i> These bits define the Mux selection for the negative ADC input. (MUXNEG)
 // <id> adc_pinmux_negative
 #ifndef CONF_ADC_1_MUXNEG
-#define CONF_ADC_1_MUXNEG 0x0
+#define CONF_ADC_1_MUXNEG 0x18
 #endif
 
 // </h>
