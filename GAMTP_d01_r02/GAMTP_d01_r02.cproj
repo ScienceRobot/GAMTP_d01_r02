@@ -196,7 +196,7 @@
           <AcmeProjectActionInfo Action="File" Source="config/hpl_adc_config.h" IsConfig="true" Hash="oQn9LfD7GwS7s/7Cm6B9YA" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_cmcc_config.h" IsConfig="true" Hash="bmtxQ8rLloaRtAo2HeXZRQ" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_dmac_config.h" IsConfig="true" Hash="mNec32O7w53e4vDmQlvjCA" />
-          <AcmeProjectActionInfo Action="File" Source="config/hpl_gclk_config.h" IsConfig="true" Hash="eQEDwBIU41Ck8DumXHMx8A" />
+          <AcmeProjectActionInfo Action="File" Source="config/hpl_gclk_config.h" IsConfig="true" Hash="oM7FiKDLUZdwRzAucsYq3A" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_gmac_config.h" IsConfig="true" Hash="g9q3uKuq6CONQbSwjG6yAQ" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_mclk_config.h" IsConfig="true" Hash="pxBzoQXTG66x4dbzVzxteg" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_osc32kctrl_config.h" IsConfig="true" Hash="HgvzEqDUH4jq/syjj/+G+Q" />
@@ -204,7 +204,7 @@
           <AcmeProjectActionInfo Action="File" Source="config/hpl_port_config.h" IsConfig="true" Hash="q78dOqqSQQP36czagr8gcQ" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_sercom_config.h" IsConfig="true" Hash="lc1QAeuYZ5rDPaHeaY7mVA" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_tc_config.h" IsConfig="true" Hash="A/1gyLIzudHoH5RzlmKtZw" />
-          <AcmeProjectActionInfo Action="File" Source="config/peripheral_clk_config.h" IsConfig="true" Hash="KPBQo32e85bO35utl/29Rg" />
+          <AcmeProjectActionInfo Action="File" Source="config/peripheral_clk_config.h" IsConfig="true" Hash="3JIxEeNdaaR5Zj0YT2gsxw" />
           <AcmeProjectActionInfo Action="File" Source="config/ieee8023_mii_standard_config.h" IsConfig="true" Hash="F6MiFC3dRK3mO0hW6lwdbg" />
           <AcmeProjectActionInfo Action="File" Source="config/stdio_redirect_config.h" IsConfig="true" Hash="CKmkBk12sfr7mb+HRQBuzg" />
         </AcmeActionInfos>
