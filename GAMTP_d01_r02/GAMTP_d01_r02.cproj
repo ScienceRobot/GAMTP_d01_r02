@@ -185,7 +185,7 @@
           <AcmeProjectActionInfo Action="File" Source="hpl/port/hpl_gpio_base.h" IsConfig="false" Hash="d+x/HgDlHjC9REAZe4D1bA" />
           <AcmeProjectActionInfo Action="File" Source="hpl/ramecc/hpl_ramecc.c" IsConfig="false" Hash="pMdmwVWBg16VG8HOwA3DPw" />
           <AcmeProjectActionInfo Action="File" Source="hpl/sercom/hpl_sercom.c" IsConfig="false" Hash="98yzU2OO6MtC1QVA5K9CGQ" />
-          <AcmeProjectActionInfo Action="File" Source="hpl/tc/hpl_tc.c" IsConfig="false" Hash="Z/vtjNgDQ4yAFWv41uFFBg" />
+          <AcmeProjectActionInfo Action="File" Source="hpl/tc/hpl_tc.c" IsConfig="false" Hash="0PTAzi1Exrn5I/1v9WJwuA" />
           <AcmeProjectActionInfo Action="File" Source="hpl/tc/hpl_tc_base.h" IsConfig="false" Hash="gjj5IyaZPy6sUReifzS1GQ" />
           <AcmeProjectActionInfo Action="File" Source="ethernet_phy_main.c" IsConfig="false" Hash="9PnGnZ9Lp45nn37tCwHecg" />
           <AcmeProjectActionInfo Action="File" Source="ethernet_phy_main.h" IsConfig="false" Hash="SpWzTP2utMfkOPjSOMUdxg" />
@@ -203,8 +203,8 @@
           <AcmeProjectActionInfo Action="File" Source="config/hpl_oscctrl_config.h" IsConfig="true" Hash="pERH++43s8Z1vtyct6281A" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_port_config.h" IsConfig="true" Hash="q78dOqqSQQP36czagr8gcQ" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_sercom_config.h" IsConfig="true" Hash="lc1QAeuYZ5rDPaHeaY7mVA" />
-          <AcmeProjectActionInfo Action="File" Source="config/hpl_tc_config.h" IsConfig="true" Hash="A/1gyLIzudHoH5RzlmKtZw" />
-          <AcmeProjectActionInfo Action="File" Source="config/peripheral_clk_config.h" IsConfig="true" Hash="3JIxEeNdaaR5Zj0YT2gsxw" />
+          <AcmeProjectActionInfo Action="File" Source="config/hpl_tc_config.h" IsConfig="true" Hash="XkK2jkjk+pkj7lfA6Lznag" />
+          <AcmeProjectActionInfo Action="File" Source="config/peripheral_clk_config.h" IsConfig="true" Hash="rPflZFiHzi9LFaO6u3T9vw" />
           <AcmeProjectActionInfo Action="File" Source="config/ieee8023_mii_standard_config.h" IsConfig="true" Hash="F6MiFC3dRK3mO0hW6lwdbg" />
           <AcmeProjectActionInfo Action="File" Source="config/stdio_redirect_config.h" IsConfig="true" Hash="CKmkBk12sfr7mb+HRQBuzg" />
         </AcmeActionInfos>

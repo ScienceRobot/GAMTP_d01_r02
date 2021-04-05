@@ -242,10 +242,10 @@ static void TIMER_0_init(void)
  */
 static void TIMER_1_init(void)
 {
-	hri_mclk_set_APBAMASK_TC1_bit(MCLK);
-	hri_gclk_write_PCHCTRL_reg(GCLK, TC1_GCLK_ID, CONF_GCLK_TC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+	hri_mclk_set_APBBMASK_TC2_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, TC2_GCLK_ID, CONF_GCLK_TC2_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
 
-	timer_init(&TIMER_1, TC1, _tc_get_timer());
+	timer_init(&TIMER_1, TC2, _tc_get_timer());
 }
 
 void ETHERNET_MAC_0_PORT_init(void)

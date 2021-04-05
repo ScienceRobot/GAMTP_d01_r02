@@ -361,6 +361,10 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 					ConfigureAccelerometers(AccelMask,ACCEL_STATUS_ENABLED|ACCEL_STATUS_SINGLE_SAMPLE|ACCEL_STATUS_POLLING,0);
 					APStatus.flags|=ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will call GetSample
 				}
+				//start Accel/Touch timer if not started already
+				if (!_timer_is_started(&TIMER_1.device)) {
+					timer_start(&TIMER_1);
+				}
 				//Get_Accelerometer_Samples();
 
 			break;

@@ -19,7 +19,7 @@ extern "C" {
 
 #define TCA9548A_ADDRESS    0x70
 
-
+#define USE_MPU6050 1
     
 #define MAX_NUM_ACCEL 8 //Maximum number of accelerometers this MCU can control
 //#define ACCEL_POLL_INTERVAL 100 //check accelerometer every 100ms (10x a second)

@@ -12,6 +12,7 @@
 #include <hal_init.h>
 
 #include <hpl_adc_base.h>
+#include <hpl_adc_base.h>
 
 /* The channel amount for ADC */
 #define ADC_0_CH_AMOUNT 1
@@ -22,17 +23,30 @@
 /* The maximal channel number of enabled channels */
 #define ADC_0_CH_MAX 0
 
+/* The channel amount for ADC */
+#define ADC_1_CH_AMOUNT 1
+
+/* The buffer size for ADC */
+#define ADC_1_BUFFER_SIZE 16
+
+/* The maximal channel number of enabled channels */
+#define ADC_1_CH_MAX 0
+
 /*! The buffer size for USART */
 #define USART_1_BUFFER_SIZE 256
 
 struct adc_async_descriptor         ADC_0;
 struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
+struct adc_async_descriptor         ADC_1;
+struct adc_async_channel_descriptor ADC_1_ch[ADC_1_CH_AMOUNT];
 struct usart_async_descriptor       USART_1;
 struct timer_descriptor             TIMER_0;
 struct timer_descriptor             TIMER_1;
 
 static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
 static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
+static uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
+static uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
 static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct usart_sync_descriptor USART_0;
@@ -62,6 +76,49 @@ void ADC_0_init(void)
 	gpio_set_pin_direction(PA03, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PA03, PINMUX_PA03B_ADC0_AIN1);
+}
+
+/**
+ * \brief ADC initialization function
+ *
+ * Enables ADC peripheral, clocks and initializes ADC driver
+ */
+void ADC_1_init(void)
+{
+	hri_mclk_set_APBDMASK_ADC1_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, ADC1_GCLK_ID, CONF_GCLK_ADC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+	adc_async_init(&ADC_1, ADC1, ADC_1_map, ADC_1_CH_MAX, ADC_1_CH_AMOUNT, &ADC_1_ch[0], (void *)NULL);
+	adc_async_register_channel_buffer(&ADC_1, 0, ADC_1_buffer, ADC_1_BUFFER_SIZE);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PC02, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PC02, PINMUX_PC02B_ADC1_AIN4);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PC03, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PC03, PINMUX_PC03B_ADC1_AIN5);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB04, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB04, PINMUX_PB04B_ADC1_AIN6);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB05, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB05, PINMUX_PB05B_ADC1_AIN7);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PC00, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PC00, PINMUX_PC00B_ADC1_AIN10);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PC01, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PC01, PINMUX_PC01B_ADC1_AIN11);
 }
 
 void USART_0_PORT_init(void)
@@ -709,7 +766,7 @@ void system_init(void)
 	                   // <id> pad_initial_level
 	                   // <false"> Low
 	                   // <true"> High
-	                   true);
+	                   false);
 
 	// Set pin direction to output
 	gpio_set_pin_direction(PC14, GPIO_DIRECTION_OUT);
@@ -773,6 +830,7 @@ void system_init(void)
 	gpio_set_pin_function(PC25, GPIO_PIN_FUNCTION_OFF);
 
 	ADC_0_init();
+	ADC_1_init();
 
 	USART_0_init();
 

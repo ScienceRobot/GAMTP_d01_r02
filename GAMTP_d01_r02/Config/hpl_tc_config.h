@@ -175,8 +175,8 @@
 	(uint32_t)(((float)CONF_TC0_TIMER_TICK / 1000000.f) / (1.f / (CONF_GCLK_TC0_FREQUENCY / CONF_TC0_PRESCALE)))
 #endif
 
-#ifndef CONF_TC1_ENABLE
-#define CONF_TC1_ENABLE 1
+#ifndef CONF_TC2_ENABLE
+#define CONF_TC2_ENABLE 1
 #endif
 
 #include "peripheral_clk_config.h"
@@ -194,21 +194,21 @@
 // <0x7=> Divide by 1024
 // <i> This defines the prescaler value
 // <id> timer_prescaler
-#ifndef CONF_TC1_PRESCALER
-#define CONF_TC1_PRESCALER 0x0
+#ifndef CONF_TC2_PRESCALER
+#define CONF_TC2_PRESCALER 0x4
 #endif
 
 // <o> Length of one timer tick in uS <0-4294967295>
 // <id> timer_tick
-#ifndef CONF_TC1_TIMER_TICK
-#define CONF_TC1_TIMER_TICK 10000
+#ifndef CONF_TC2_TIMER_TICK
+#define CONF_TC2_TIMER_TICK 10000
 #endif
 // </h>
 
 // <e> Advanced configuration
 // <id> timer_advanced_configuration
-#ifndef CONF_TC1__ADVANCED_CONFIGURATION_ENABLE
-#define CONF_TC1__ADVANCED_CONFIGURATION_ENABLE 0
+#ifndef CONF_TC2__ADVANCED_CONFIGURATION_ENABLE
+#define CONF_TC2__ADVANCED_CONFIGURATION_ENABLE 0
 #endif
 
 // <y> Prescaler and Counter Synchronization Selection
@@ -217,72 +217,72 @@
 // <TC_CTRLA_PRESCSYNC_RESYNC_Val"> Reload or reset counter on next GCLK and reset prescaler counter
 // <i> These bits select if on retrigger event, the Counter should be cleared or reloaded on the next GCLK_TCx clock or on the next prescaled GCLK_TCx clock.
 // <id> tc_arch_presync
-#ifndef CONF_TC1_PRESCSYNC
-#define CONF_TC1_PRESCSYNC TC_CTRLA_PRESCSYNC_GCLK_Val
+#ifndef CONF_TC2_PRESCSYNC
+#define CONF_TC2_PRESCSYNC TC_CTRLA_PRESCSYNC_GCLK_Val
 #endif
 
 // <q> Run in standby
 // <i> Indicates whether the module will continue to run in standby sleep mode
 // <id> tc_arch_runstdby
-#ifndef CONF_TC1_RUNSTDBY
-#define CONF_TC1_RUNSTDBY 0
+#ifndef CONF_TC2_RUNSTDBY
+#define CONF_TC2_RUNSTDBY 0
 #endif
 
 // <q> Run in debug mode
 // <i> Indicates whether the module will run in debug mode
 // <id> tc_arch_dbgrun
-#ifndef CONF_TC1_DBGRUN
-#define CONF_TC1_DBGRUN 0
+#ifndef CONF_TC2_DBGRUN
+#define CONF_TC2_DBGRUN 0
 #endif
 
 // <q> Run on demand
 // <i> Run if requested by some other peripheral in the device
 // <id> tc_arch_ondemand
-#ifndef CONF_TC1_ONDEMAND
-#define CONF_TC1_ONDEMAND 0
+#ifndef CONF_TC2_ONDEMAND
+#define CONF_TC2_ONDEMAND 0
 #endif
 
 // </e>
 
 // <e> Event control
 // <id> timer_event_control
-#ifndef CONF_TC1_EVENT_CONTROL_ENABLE
-#define CONF_TC1_EVENT_CONTROL_ENABLE 0
+#ifndef CONF_TC2_EVENT_CONTROL_ENABLE
+#define CONF_TC2_EVENT_CONTROL_ENABLE 0
 #endif
 
 // <q> Output Event On Match or Capture on Channel 0
 // <i> Enable output of event on timer tick
 // <id> tc_arch_mceo0
-#ifndef CONF_TC1_MCEO0
-#define CONF_TC1_MCEO0 0
+#ifndef CONF_TC2_MCEO0
+#define CONF_TC2_MCEO0 0
 #endif
 
 // <q> Output Event On Match or Capture on Channel 1
 // <i> Enable output of event on timer tick
 // <id> tc_arch_mceo1
-#ifndef CONF_TC1_MCEO1
-#define CONF_TC1_MCEO1 0
+#ifndef CONF_TC2_MCEO1
+#define CONF_TC2_MCEO1 0
 #endif
 
 // <q> Output Event On Timer Tick
 // <i> Enable output of event on timer tick
 // <id> tc_arch_ovfeo
-#ifndef CONF_TC1_OVFEO
-#define CONF_TC1_OVFEO 0
+#ifndef CONF_TC2_OVFEO
+#define CONF_TC2_OVFEO 0
 #endif
 
 // <q> Event Input
 // <i> Enable asynchronous input events
 // <id> tc_arch_tcei
-#ifndef CONF_TC1_TCEI
-#define CONF_TC1_TCEI 0
+#ifndef CONF_TC2_TCEI
+#define CONF_TC2_TCEI 0
 #endif
 
 // <q> Inverted Event Input
 // <i> Invert the asynchronous input events
 // <id> tc_arch_tcinv
-#ifndef CONF_TC1_TCINV
-#define CONF_TC1_TCINV 0
+#ifndef CONF_TC2_TCINV
+#define CONF_TC2_TCINV 0
 #endif
 
 // <o> Event action
@@ -296,54 +296,54 @@
 // <7=> Pulse width capture
 // <i> Event which will be performed on an event
 //<id> tc_arch_evact
-#ifndef CONF_TC1_EVACT
-#define CONF_TC1_EVACT 0
+#ifndef CONF_TC2_EVACT
+#define CONF_TC2_EVACT 0
 #endif
 // </e>
 
 // Default values which the driver needs in order to work correctly
 
 // Mode set to 32-bit
-#ifndef CONF_TC1_MODE
-#define CONF_TC1_MODE TC_CTRLA_MODE_COUNT32_Val
+#ifndef CONF_TC2_MODE
+#define CONF_TC2_MODE TC_CTRLA_MODE_COUNT32_Val
 #endif
 
 // CC 1 register set to 0
-#ifndef CONF_TC1_CC1
-#define CONF_TC1_CC1 0
+#ifndef CONF_TC2_CC1
+#define CONF_TC2_CC1 0
 #endif
 
-#ifndef CONF_TC1_ALOCK
-#define CONF_TC1_ALOCK 0
+#ifndef CONF_TC2_ALOCK
+#define CONF_TC2_ALOCK 0
 #endif
 
 // Not used in 32-bit mode
-#define CONF_TC1_PER 0
+#define CONF_TC2_PER 0
 
 // Calculating correct top value based on requested tick interval.
-#define CONF_TC1_PRESCALE (1 << CONF_TC1_PRESCALER)
+#define CONF_TC2_PRESCALE (1 << CONF_TC2_PRESCALER)
 
 // Prescaler set to 64
-#if CONF_TC1_PRESCALER > 0x4
-#undef CONF_TC1_PRESCALE
-#define CONF_TC1_PRESCALE 64
+#if CONF_TC2_PRESCALER > 0x4
+#undef CONF_TC2_PRESCALE
+#define CONF_TC2_PRESCALE 64
 #endif
 
 // Prescaler set to 256
-#if CONF_TC1_PRESCALER > 0x5
-#undef CONF_TC1_PRESCALE
-#define CONF_TC1_PRESCALE 256
+#if CONF_TC2_PRESCALER > 0x5
+#undef CONF_TC2_PRESCALE
+#define CONF_TC2_PRESCALE 256
 #endif
 
 // Prescaler set to 1024
-#if CONF_TC1_PRESCALER > 0x6
-#undef CONF_TC1_PRESCALE
-#define CONF_TC1_PRESCALE 1024
+#if CONF_TC2_PRESCALER > 0x6
+#undef CONF_TC2_PRESCALE
+#define CONF_TC2_PRESCALE 1024
 #endif
 
-#ifndef CONF_TC1_CC0
-#define CONF_TC1_CC0                                                                                                   \
-	(uint32_t)(((float)CONF_TC1_TIMER_TICK / 1000000.f) / (1.f / (CONF_GCLK_TC1_FREQUENCY / CONF_TC1_PRESCALE)))
+#ifndef CONF_TC2_CC0
+#define CONF_TC2_CC0                                                                                                   \
+	(uint32_t)(((float)CONF_TC2_TIMER_TICK / 1000000.f) / (1.f / (CONF_GCLK_TC2_FREQUENCY / CONF_TC2_PRESCALE)))
 #endif
 
 // <<< end of configuration section >>>

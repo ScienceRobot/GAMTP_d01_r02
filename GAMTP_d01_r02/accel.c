@@ -12,20 +12,6 @@
 #include "robot_accelmagtouchgps_mcu_instructions.h"
 
 
-extern AccelPCBStatus APStatus; 
-extern uint8_t NumAccelerometers;
-extern AccelStatus Accel[MAX_NUM_ACCEL];  
-extern struct timer_descriptor       TIMER_1;
-extern struct i2c_m_sync_desc        I2C_0;
-
-extern uint8_t AccelTimerSend[ACCEL_POLL_SEND_SIZE];  //touch sensor packet data to send back to requester
-extern uint32_t AccelTimerSendLen; //length of touch sensor send data packet
-
-extern uint8_t TouchSend[TOUCH_SEND_SIZE];  //touch sensor packet data to send back to requester
-extern uint32_t TouchSendLen; //length of touch sensor send data packet
-
-
-
 //Accel variables
 uint8_t NumAccelerometers;//
 AccelStatus Accel[MAX_NUM_ACCEL]; //status of each accelerometer
@@ -47,9 +33,23 @@ uint32_t AccelTimerSendLen; //length of accel polling and interrupt send data pa
 
 AccelPCBStatus APStatus; //status of AccelTouch PCB
 
-
-
 static struct timer_task AccelTimerTask;
+
+
+extern AccelPCBStatus APStatus; 
+extern uint8_t NumAccelerometers;
+extern AccelStatus Accel[MAX_NUM_ACCEL];
+extern struct timer_descriptor       TIMER_0;  
+extern struct timer_descriptor       TIMER_1;
+extern struct i2c_m_sync_desc        I2C_0;
+
+extern uint8_t AccelTimerSend[ACCEL_POLL_SEND_SIZE];  //touch sensor packet data to send back to requester
+extern uint32_t AccelTimerSendLen; //length of touch sensor send data packet
+
+extern uint8_t TouchSend[TOUCH_SEND_SIZE];  //touch sensor packet data to send back to requester
+extern uint32_t TouchSendLen; //length of touch sensor send data packet
+
+
 
 static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 {
@@ -86,8 +86,10 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 } //static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 
 
-//TIMER_1 uses the TC1 peripheral which takes as input a 2MHz generic clock which creates an interrupt 
+//TIMER_1 uses the TC1 peripheral which takes as input a 100kHz generic clock which creates an interrupt 
 //every 10ms (100hz) to get readings and send over UDP
+//NOTE: TIMER INTERRUPTS CAN DISRUPT DHCP
+//NOTE: TC2 needs to be used for 32bit timers presumably use both TC0 and TC1
 void AccelTimer_Initialize(void)
 {
 	AccelTimerTask.interval = 1; //clock ticks
@@ -646,7 +648,7 @@ uint8_t Get_Accelerometer_Samples(void) {
     uint8_t i,RegAddr;
     uint8_t ReturnValue,result;
     //uint32_t TempSendLen;
-    
+    uint8_t DonePolling;
     //printf("S\n\r");
   	uint8_t addr;  
 	  
@@ -688,9 +690,14 @@ uint8_t Get_Accelerometer_Samples(void) {
     } //for(i=0
 */
 	
+	DonePolling=1;
+	
     for(i=0;i<NumAccelerometers;i++) {
         if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
-            if (Accel[i].flags&(ACCEL_STATUS_POLLING|ACCEL_STATUS_GOT_INTERRUPT)) { 
+            if (Accel[i].flags&(ACCEL_STATUS_POLLING|ACCEL_STATUS_GOT_INTERRUPT)) {
+				if (Accel[i].flags&ACCEL_STATUS_POLLING) {
+					DonePolling=0; //still polling 
+				}
                 //set TCA9548A mask to this accel
 				i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
 				addr=1<<i;
@@ -699,7 +706,7 @@ uint8_t Get_Accelerometer_Samples(void) {
 				i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);				
 				io_write(&(I2C_0.io), &RegAddr, 1);
 				io_read(&(I2C_0.io), Accel[i].Buffer, 14);
-				printf("%02x %02x %02x",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
+				printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
 	
 /*                Accel[i].I2CBufferHandle=DRV_I2C_TransmitThenReceive(Accel[i].handleI2C, 
                                                         Accel[i].I2CAddress,
@@ -712,10 +719,17 @@ uint8_t Get_Accelerometer_Samples(void) {
                                                         NULL); 
                 DelayUs(500); //delay500uS
 				*/
+				if (Accel[i].flags&ACCEL_STATUS_SINGLE_SAMPLE) {
+					//user only wants single sample, stop polling on this accelerometer
+					Accel[i].flags&=~(ACCEL_STATUS_POLLING|ACCEL_STATUS_SINGLE_SAMPLE);	
+				}
             } //if (Accel[i].flags&ACCEL_STATUS_POLLING) { //skip any set to interrupt
         } //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
     } //for i
 
+	if (DonePolling) {
+		APStatus.flags&=~ACCEL_PCB_STATUS_ACCEL_POLLING;		
+	}
     
     return(1);
 } //uint8_t Get_Accelerometer_Samples(void) {
@@ -747,15 +761,18 @@ uint8_t InitializeAccels(void) {
 
 	int i;
 	
+	NumAccelerometers=8; //there can be up to 8 accelerometers on a GAMTP
+	
 	//set TC9548A ~reset~ pin = 1
 	gpio_set_pin_direction(GPIO(GPIO_PORTA, 21),GPIO_DIRECTION_OUT);
 	gpio_set_pin_level(GPIO(GPIO_PORTA, 21),true);
 	
 	
 	for(i=0;i<NumAccelerometers;i++) {	 
-		Accel[0].flags&=~ACCEL_STATUS_ENABLED;
+		Accel[i].flags&=~ACCEL_STATUS_ENABLED;
 	}
-	Accel[0].flags|=ACCEL_STATUS_ENABLED;
+	//enable Accel[0]
+	//Accel[0].flags|=ACCEL_STATUS_ENABLED;
 		
 
 	for(i=0;i<NumAccelerometers;i++) {

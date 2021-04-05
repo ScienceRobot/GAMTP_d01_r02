@@ -105,7 +105,8 @@ static void MotorTimerTask_cb(const struct timer_task *const timer_task)
 } //static void MotorTimerTask_cb(const struct timer_task *const timer_task)
 
 
-//TIMER_0 uses the TC0 peripheral which takes as input a 2MHz generic clock which creates an interrupt every 25us- a 40khz (25us) signal for Motor pwm
+//TIMER_0 uses the TC0 peripheral which takes as input a 400MHz generic clock which creates an tick (interrupt) every 25us- a 40khz (25us) signal for Motor pwm
+//NOTE: TIMER INTERRUPTS CAN DISRUPT DHCP
 void MotorTimer_Initialize(void)
 {
 	MotorTimerTask.interval = 1; //clock ticks
