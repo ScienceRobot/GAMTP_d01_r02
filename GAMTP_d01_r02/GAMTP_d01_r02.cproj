@@ -1367,6 +1367,12 @@
     <Compile Include="stdio_start.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="touchsensors.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="touchsensors.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="udpserver.c">
       <SubType>compile</SubType>
     </Compile>
