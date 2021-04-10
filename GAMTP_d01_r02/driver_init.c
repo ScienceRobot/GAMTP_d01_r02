@@ -43,11 +43,11 @@ struct usart_async_descriptor       USART_1;
 struct timer_descriptor             TIMER_0;
 struct timer_descriptor             TIMER_1;
 
-static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
-static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
-static uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
-static uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
-static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
+uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
+uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
+uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
+uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
+uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct usart_sync_descriptor USART_0;
 

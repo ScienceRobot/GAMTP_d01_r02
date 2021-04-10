@@ -345,6 +345,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			//Accelerometers
 			//**************
 			case ROBOT_ACCELMAGTOUCH_GET_ACCELEROMETER_VALUES:
+				//copy sender IP to Accel structure
 				printf("Get accel values");
 				memcpy(AccelTimerSend,InstData,5); //copy IP + inst byte to return instruction
 				memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask

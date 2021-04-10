@@ -10,6 +10,7 @@
 #include <hal_timer.h>
 #include <hal_i2c_m_sync.h>
 #include "robot_accelmagtouchgps_mcu_instructions.h"
+#include <lwip/udp.h>
 
 
 //Accel variables
@@ -49,6 +50,8 @@ extern uint32_t AccelTimerSendLen; //length of touch sensor send data packet
 extern uint8_t TouchSend[TOUCH_SEND_SIZE];  //touch sensor packet data to send back to requester
 extern uint32_t TouchSendLen; //length of touch sensor send data packet
 
+extern struct adc_async_descriptor         ADC_0;
+extern struct adc_async_descriptor         ADC_1;
 
 
 static void AccelTimerTask_cb(const struct timer_task *const timer_task)
@@ -77,8 +80,9 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 
 	if ((APStatus.flags&ACCEL_PCB_STATUS_TOUCH_SENSOR_POLLING) ||
 	(APStatus.flags&ACCEL_PCB_STATUS_TOUCH_SENSOR_INTERRUPT)) {
-		//IEC6bits.ADCEOSIE=1; //enable end of scan interrupt
-		//ADCCON3bits.GSWTRG = 1;// Trigger a conversion
+		//Start ADC conversion (will call callback function once complete)
+		adc_async_start_conversion(&ADC_0);
+		adc_async_start_conversion(&ADC_1);
 	} //
 				
 
@@ -314,123 +318,6 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 
 }//uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 
-#if 0 
-uint8_t Enable_Accelerometer_Interrupt(uint8_t num)
-{
-
-    uint8_t I2CData[20];
-    uint8_t I2CByte,result,NumBytes;
-    uint8_t   RelativeInt;
-    uint16_t  AccelThresh;
-
-
-#if USE_MPU6050
-    I2CData[0] = MPU6050_INT_PIN_CFG; 
-    I2CData[1] = MPU6050_INT_PIN_CFG_INT_LEVEL|
-            MPU6050_INT_PIN_CFG_LATCH_INT_EN|
-            MPU6050_INT_PIN_CFG_INT_RD_CLEAR;
-
-    Accel[num].I2CBufferHandle=DRV_I2C_Transmit(Accel[num].handleI2C,
-                                                        Accel[num].I2CAddress,
-                                                        I2CData,
-                                                        2, 
-                                                        NULL);
-    delay_ms(1); //need or i2c queue may become full
-    //if (Accel[AccelNum].I2CBufferHandle != NULL) {        
-    result=WaitForI2C(Accel[num].handleI2C,Accel[num].I2CBufferHandle);    
-    //if (Accel[AccelNum].I2CBufferHandle == NULL) {
-    if (result!=I2C_INST_COMPLETE) {
-        printf("Failed to write to INT_PIN_CFG reg, accel=%d\r\n",num);
-        return(0);
-    }
-    
-
-    I2CData[0] = MPU6050_INT_ENABLE; 
-    I2CData[1] = MPU6050_INT_ENABLE_DATA_RDY_EN;
-    Accel[num].I2CBufferHandle=DRV_I2C_Transmit(Accel[num].handleI2C,
-                                                        Accel[num].I2CAddress,
-                                                        I2CData,
-                                                        2, 
-                                                        NULL);
-    delay_ms(1); //need or i2c queue may become full
-    //if (Accel[AccelNum].I2CBufferHandle != NULL) {        
-    result=WaitForI2C(Accel[num].handleI2C,Accel[num].I2CBufferHandle);    
-    //if (Accel[AccelNum].I2CBufferHandle == NULL) {
-    if (result!=I2C_INST_COMPLETE) {
-        printf("Failed to write to INT_PIN_CFG reg, accel=%d\r\n",num);
-        return(0);
-    }
-
-    
-#endif //USE_MPU6050
-
-    
-    
-    //enable the external interrupt on the PIC
-    //todo: see if just storing actual registers and bit masks is a better solution here
-    switch(Accel[num].IntNum) {
-        case 0: //Interrupt 0
-            //SYS_INT_SourceDisable(INT_SOURCE_EXTERNAL_0);
-            PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_EXTERNAL_0);
-            //SYS_INT_VectorPrioritySet(INT_VECTOR_INT0, INT_PRIORITY_LEVEL4);
-            //SYS_INT_VectorSubprioritySet(INT_VECTOR_INT0, INT_SUBPRIORITY_LEVEL2);
-            //SYS_INT_ExternalInterruptTriggerSet(INT_EXTERNAL_INT_SOURCE0,INT_EDGE_TRIGGER_FALLING);
-            SYS_INT_SourceEnable(INT_SOURCE_EXTERNAL_0);
-/*            
-            IEC0bits.INT0IE=0; //disable interrupt
-            INTCONbits.INT0EP=0; //int polarity 0=falling edge
-            IFS0bits.INT0IF=0; //clear int flag
-            //IPC0bits.INT0IP=4; //int priority
-            IPC0bits.INT0IP=4; //int priority
-            IPC0bits.INT0IS=2;  //int subpriority
-            IEC0bits.INT0IE=1;  //enable the interrupt
- */
-        break;
-        case 1: //Interrupt 1
-            //SYS_INT_SourceDisable(INT_SOURCE_EXTERNAL_1);
-            PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_EXTERNAL_1);
-            //SYS_INT_VectorPrioritySet(INT_VECTOR_INT1, INT_PRIORITY_LEVEL4);
-            //SYS_INT_VectorSubprioritySet(INT_VECTOR_INT1, INT_SUBPRIORITY_LEVEL2);
-            //SYS_INT_ExternalInterruptTriggerSet(INT_EXTERNAL_INT_SOURCE1,INT_EDGE_TRIGGER_FALLING);
-            SYS_INT_SourceEnable(INT_SOURCE_EXTERNAL_1);
-/*
-            IEC0bits.INT1IE=0; //disable interrupt
-            INTCONbits.INT1EP=0; //int polarity 0=falling edge
-            IFS0bits.INT1IF=0; //clear int flag
-            IPC2bits.INT1IP=4; //int priority
-            IPC2bits.INT1IS=2;  //int subpriority
-            IEC0bits.INT1IE=1;  //enable the interrupt
- */
-        break;
-        case 4: //Interrupt 4
-            //SYS_INT_SourceDisable(INT_SOURCE_EXTERNAL_4);
-            PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_EXTERNAL_4);
-            //SYS_INT_VectorPrioritySet(INT_VECTOR_INT4, INT_PRIORITY_LEVEL4);
-            //SYS_INT_VectorSubprioritySet(INT_VECTOR_INT4, INT_SUBPRIORITY_LEVEL2);
-            //SYS_INT_ExternalInterruptTriggerSet(INT_EXTERNAL_INT_SOURCE4,INT_EDGE_TRIGGER_FALLING);
-            SYS_INT_SourceEnable(INT_SOURCE_EXTERNAL_4);
-/*          IEC0bits.INT4IE=0; //disable interrupt
-            INTCONbits.INT4EP=0; //int polarity 0=falling edge
-            IFS0bits.INT4IF=0; //clear int flag
-            IPC5bits.INT4IP=4; //int priority
-            IPC5bits.INT4IS=2;  //int subpriority
-            IEC0bits.INT4IE=1;  //enable the interrupt
-*/
-            break;
-    } //switch(num)
-    
-    return(1);
-}//uint8_t Enable_Accelerometer_Interrupt(uint8_t num)
-
-uint8_t Disable_Accelerometer_Interrupt(uint8_t num)
-{
-
-    uint8_t I2CData[10];
-    uint8_t I2CByte,result;
-
-    return(1);
-}//uint8_t Disable_Accelerometer_Interrupt(uint8_t num)
-#endif
 
 //Configure one or more accelerometers
 //Note ENABLED flag needs to be included, or the accel selected will be disabled
@@ -596,44 +483,6 @@ return(1);
 } //uint8_t ConfigureAccelerometers(uint16_t mask,uint32_t flags,uint16_t Threshold)
 
 
-#if 0 
-uint8_t Clear_Accelerometer_Interrupt(uint8_t num) {
-
-    uint8_t I2CData[10],ReturnByte,result;
-
-    //wait for read to finish
-    //result=WaitForI2C(Accel[num].handleI2C,Accel[num].I2CBufferHandle);    
-    //if (result==I2C_INST_COMPLETE) {
-        return(1);
-    //} else {
-    //    printf("Err:%d clr A%d int\n\r",result,num);
-   // }
-    
-    //return(0); 
-    
-
-} //uint8_t Clear_Accelerometer_Interrupt(uint8_t num) {
-#endif
-
-
-#if 0 
-//Currently accelerometer interrupts are processed and a UDP packet
-//with their X,Y data sent one at a time as they arrive
-//uint8_t Process_Accelerometer_Interrupt(uint8_t AccelNum) {
-uint8_t Process_Accelerometer_Interrupt(void) 
-{
-
-    uint8_t I2CData[20];
-    //uint8_t GotIntData;
-    uint8_t ReturnValue,i,RegAddr,result;
-    uint16_t ReturnSampleX;
-    uint16_t ReturnSampleY;
-    uint16_t ReturnSampleZ;
-
-    return(1);
-} //uint8_t Process_Accelerometer_Interrupt(void) {
-#endif
-
 
 //Get_Accelerometer_Samples
 //This function is called by the (10ms) timer 
@@ -730,29 +579,41 @@ uint8_t Get_Accelerometer_Samples(void) {
 	if (DonePolling) {
 		APStatus.flags&=~ACCEL_PCB_STATUS_ACCEL_POLLING;		
 	}
+	
+	SendTimerUDPPacket(); //send UDF packet with accel data
     
     return(1);
 } //uint8_t Get_Accelerometer_Samples(void) {
 
 
 uint8_t SendTimerUDPPacket(void) {
+	uint8_t *ReturnInst; //currently just 50 bytes but probably will change
+	struct pbuf *retbuf;  //return buffer
+	uint32_t ReturnInstLen, bufcount;
+	uint8_t buffer[256]; //temporary buffer
+	int i;
+	
+	ReturnInstLen=5;
+	bufcount=0;
+    for(i=0;i<NumAccelerometers;i++) {
+	    if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
+			buffer[bufcount++]=Accel[i].Buffer[0];				
+			buffer[bufcount++]=Accel[i].Buffer[1];
+			buffer[bufcount++]=Accel[i].Buffer[2];
+		} //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
+	} //for i
+
+	retbuf = pbuf_alloc(PBUF_TRANSPORT, 5+bufcount, PBUF_RAM);
+	ReturnInst=retbuf->payload;
+//	memcpy(ReturnInst,&InstData,5); //copy IP + inst byte to return instruction
+	memcpy(ReturnInst+5,buffer,bufcount); //copy IP + inst byte to return instruction
+
 
     if (AccelTimerSendLen>5) {
         //send the UDP packet
-        //while (TCPIP_UDP_PutIsReady(appData.socket)<AccelTimerSendLen) {};
-        //TCPIP_UDP_ArrayPut(appData.socket,AccelTimerSend,AccelTimerSendLen);  //little endian       
-        //TCPIP_UDP_Flush(appData.socket); //send the packet
-		/*        
-		retbuf = pbuf_alloc(PBUF_TRANSPORT, 10, PBUF_RAM);
-		ReturnInst=retbuf->payload;
-		memcpy(ReturnInst,p->payload,5); //copy IP + inst byte to return instruction
-		ReturnInst[6]=0x12;
-		ReturnInst[7]=0x34;
-		ReturnInst[8]=0x56;
-		ReturnInst[9]=0x78;
-		udp_sendto(pcb, retbuf, addr, UDP_PORT); //dest port
-		pbuf_free(retbuf); 
-		*/                               
+		//udp_sendto(pcb, retbuf, addr, UDP_PORT); //dest port
+		//pbuf_free(retbuf);
+      
     } //if (AccelTimerSendLen>5) {
     return(1);
 }

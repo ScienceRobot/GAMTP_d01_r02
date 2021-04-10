@@ -2,16 +2,16 @@ format_version: '2'
 name: My Project
 versions:
   api: '1.0'
-  backend: 1.8.491
-  commit: 605bd5a7663644fb84783aa2b00942b79b0d8955
+  backend: 1.8.543
+  commit: 931b2422bde1a793dea853de68547f48bf245b0f
   content: unknown
   content_pack_name: unknown
   format: '2'
   frontend: 1.8.491
-  packs_version_avr8: 1.0.1446
+  packs_version_avr8: 1.0.1457
   packs_version_qtouch: unknown
   packs_version_sam: 1.0.1726
-  version_backend: 1.8.491
+  version_backend: 1.8.543
   version_frontend: ''
 board:
   identifier: CustomBoard
@@ -79,7 +79,7 @@ drivers:
       adc_pinmux_negative: Internal ground
       adc_pinmux_positive: ADC AIN0 pin
       adc_prescaler: Peripheral clock divided by 2
-      adc_reference: Internal bandgap reference
+      adc_reference: VDDANA
       adc_resolution: 12-bit
     optional_signals:
     - identifier: ADC_0:AIN/0

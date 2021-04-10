@@ -6,7 +6,7 @@
 
 #define TOUCH_SENSOR_SEND_SIZE 50
 
-#define MAX_NUM_TOUCH_SENSORS 15 //Maximum number of touch sensors this MCU can control
+#define MAX_NUM_TOUCH_SENSORS 8 //Maximum number of touch sensors this MCU can control
 //pic32 10-bit samples #define DEFAULT_TOUCH_THRESHOLD 11//9
 #define DEFAULT_TOUCH_THRESHOLD 44
 //#define TOUCH_STATUS_MODE_POLL 0x0  //host will send a UDP packet to read this sensor- only send a UDP packet when requested
