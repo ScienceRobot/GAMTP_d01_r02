@@ -1367,10 +1367,10 @@
     <Compile Include="stdio_start.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="touchsensors.c">
+    <Compile Include="analogsensors.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="touchsensors.h">
+    <Compile Include="analogsensors.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="udpserver.c">

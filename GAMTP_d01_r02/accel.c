@@ -11,7 +11,7 @@
 #include <hal_i2c_m_sync.h>
 #include "robot_accelmagtouchgps_mcu_instructions.h"
 #include <lwip/udp.h>
-
+#include "main.h"
 
 //Accel variables
 uint8_t NumAccelerometers;//
@@ -64,6 +64,7 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
     //Touch Sensor Polling and Interrupting
     
     if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_POLLING) {
+		
 	    Get_Accelerometer_Samples();
 	} //if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_POLLING) {
 
@@ -592,27 +593,34 @@ uint8_t SendTimerUDPPacket(void) {
 	uint32_t ReturnInstLen, bufcount;
 	uint8_t buffer[256]; //temporary buffer
 	int i;
+
+	//determine return buffer size
+	bufcount=0;
+	for(i=0;i<NumAccelerometers;i++) {
+		if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
+			bufcount+=3;
+		} //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
+	} //for i	
 	
-	ReturnInstLen=5;
+	retbuf = pbuf_alloc(PBUF_TRANSPORT, 5+bufcount, PBUF_RAM);
+	ReturnInst=retbuf->payload;
+	memcpy(ReturnInst,APStatus.ReturnIP,5); //copy IP + inst byte to return instruction
+	
+
 	bufcount=0;
     for(i=0;i<NumAccelerometers;i++) {
 	    if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
-			buffer[bufcount++]=Accel[i].Buffer[0];				
-			buffer[bufcount++]=Accel[i].Buffer[1];
-			buffer[bufcount++]=Accel[i].Buffer[2];
+			ReturnInst[5+bufcount++]=Accel[i].Buffer[0];				
+			ReturnInst[5+bufcount++]=Accel[i].Buffer[1];
+			ReturnInst[5+bufcount++]=Accel[i].Buffer[2];
 		} //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
 	} //for i
+	
 
-	retbuf = pbuf_alloc(PBUF_TRANSPORT, 5+bufcount, PBUF_RAM);
-	ReturnInst=retbuf->payload;
-//	memcpy(ReturnInst,&InstData,5); //copy IP + inst byte to return instruction
-	memcpy(ReturnInst+5,buffer,bufcount); //copy IP + inst byte to return instruction
-
-
-    if (AccelTimerSendLen>5) {
+    if (bufcount>0) {
         //send the UDP packet
-		//udp_sendto(pcb, retbuf, addr, UDP_PORT); //dest port
-		//pbuf_free(retbuf);
+		udp_sendto(APStatus.pcb, retbuf, APStatus.addr, UDP_PORT); //dest port
+		pbuf_free(retbuf);
       
     } //if (AccelTimerSendLen>5) {
     return(1);

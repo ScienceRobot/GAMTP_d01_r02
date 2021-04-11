@@ -23,7 +23,6 @@
 
 #define PCB_NAME_LENGTH 5
 static const char *PCB_Name = "GAMTP";  //Motor
-#define UDP_PORT 53510  //port used for UDP communication
 
 
 /* Saved total time in mS since timer was enabled */
@@ -347,8 +346,11 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			case ROBOT_ACCELMAGTOUCH_GET_ACCELEROMETER_VALUES:
 				//copy sender IP to Accel structure
 				printf("Get accel values");
-				memcpy(AccelTimerSend,InstData,5); //copy IP + inst byte to return instruction
+				APStatus.pcb=pcb;  //save pcb
+				APStatus.addr=addr;  //save addr
+				memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
 				memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask
+				
 				//printf("AccelMask=%d\r\n",AccelMask);
 				//ACCEL_STATUS_POLLING needs to be set currently because the sample is retrieved by the timer ISR
 				if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_INTERRUPT) {
@@ -358,7 +360,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 							Accel[i].flags|=ACCEL_STATUS_CLEAR_INTERRUPT;
 						}
 					} //for i
-					} else {
+				} else {
 					ConfigureAccelerometers(AccelMask,ACCEL_STATUS_ENABLED|ACCEL_STATUS_SINGLE_SAMPLE|ACCEL_STATUS_POLLING,0);
 					APStatus.flags|=ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will call GetSample
 				}

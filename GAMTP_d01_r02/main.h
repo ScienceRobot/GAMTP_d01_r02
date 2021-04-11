@@ -15,6 +15,9 @@
 #define INST_TYPE_USART 2
 #define INST_TYPE_USART_ESP 3
 
+#define UDP_PORT 53510  //port used for UDP communication
+
+
 typedef struct Instruction
 {
 	uint8_t inbuffer[256];  //actual bytes of instruction received in (from ethernet or uart)

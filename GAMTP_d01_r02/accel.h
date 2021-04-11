@@ -45,6 +45,9 @@ extern "C" {
 #define ACCEL_PCB_STATUS_SEND_ALL_GPS_DATA 0x20 //Send all GPS data is enabled
 typedef struct {
 	uint32_t flags;
+	uint8_t ReturnIP[5];  //return instructions IP
+	struct udp_pcb *pcb;
+	struct ip_addr *addr;
 }AccelPCBStatus;
 
 
