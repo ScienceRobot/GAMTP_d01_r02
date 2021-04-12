@@ -5,6 +5,10 @@
 #include "analogsensors.h"
 //#include "app.h"
 
+//Analog Sensor variables:
+uint8_t NumAnalogSensors,NumActiveAnalogSensors;
+AnalogSensorStatus AnalogSensor[MAX_NUM_ANALOG_SENSORS]; //status of each analog sensor
+uint8_t ActiveAnalogSensor[MAX_NUM_ANALOG_SENSORS]; //list of all active analog sensors in order, for a quick reference
 
 extern uint8_t NumAnalogSensors,NumActiveAnalogSensors;
 extern AnalogSensorStatus AnalogSensor[MAX_NUM_ANALOG_SENSORS]; //status of each touch sensor
@@ -18,8 +22,21 @@ extern struct adc_async_descriptor         ADC_1;
 
 static void ADC_0_convert_cb(const struct adc_async_descriptor *const descr, const uint8_t channel)
 {
+	uint8_t bytes_read;
+	uint8_t buf_adc[4]; //a buffer to be able to read 2 channels with 12bit resolution
+		
 	//copy sample
-	
+	memset(buf_adc, 0x00, sizeof(buf_adc));
+	bytes_read = adc_async_read_channel(&ADC_0, 0, (uint8_t *)&buf_adc, 4);
+
+	AnalogSensor[0].Sample = (buf_adc[1] << 8) + buf_adc[0];
+	AnalogSensor[1].Sample = (buf_adc[3] << 8) + buf_adc[2];
+
+	printf("%x %x ",AnalogSensor[0].Sample,AnalogSensor[1].Sample);
+
+//	battery_voltage_mv = adc_value_channel_0 * VREF_V_2V5 * BAT_DIV_V / RESOLUTION_12_BIT;
+//	general_battery_voltage_mv = adc_value_channel_7 * VREF_V_2V5 * GENERAL_BAT_DIV_V / RESOLUTION_12_BIT;
+
 }
 
 static void ADC_1_convert_cb(const struct adc_async_descriptor *const descr, const uint8_t channel)
@@ -100,7 +117,7 @@ uint8_t SetActiveAnalogSensors(uint32_t mask,int Activate)
     //ADCCON1bits.ON=0; //turn off ADC module - touch sensors are disabled by default
 
     
-    //reset number of touch sensors
+    //reset number of analog sensors
     NumActiveAnalogSensors=0;
     //ADCCSS1=0; //which analog inputs are scanned
     

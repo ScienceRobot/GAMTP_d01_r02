@@ -79,11 +79,13 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 		    
 	} //if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_INTERRUPT) {
 
-	if ((APStatus.flags&ACCEL_PCB_STATUS_TOUCH_SENSOR_POLLING) ||
-	(APStatus.flags&ACCEL_PCB_STATUS_TOUCH_SENSOR_INTERRUPT)) {
+	if (APStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)  {
 		//Start ADC conversion (will call callback function once complete)
 		adc_async_start_conversion(&ADC_0);
-		adc_async_start_conversion(&ADC_1);
+		//adc_async_start_conversion(&ADC_1);
+//		if (APStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_SINGLE_SAMPLE) {
+//			APStatus&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_SINGLE_SAMPLE;
+//		}
 	} //
 				
 

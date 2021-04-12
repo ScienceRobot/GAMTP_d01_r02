@@ -193,7 +193,7 @@
           <AcmeProjectActionInfo Action="File" Source="stdio_start.h" IsConfig="false" Hash="5j2k69zdoQpbzluEyr/rHQ" />
           <AcmeProjectActionInfo Action="File" Source="atmel_start.h" IsConfig="false" Hash="RKZjZayvAEx81djxR0NCnw" />
           <AcmeProjectActionInfo Action="File" Source="atmel_start.c" IsConfig="false" Hash="lyccvgaN9qACNjjX3MzLnQ" />
-          <AcmeProjectActionInfo Action="File" Source="config/hpl_adc_config.h" IsConfig="true" Hash="fod2JPzEIRvmtXvpoFVYoA" />
+          <AcmeProjectActionInfo Action="File" Source="config/hpl_adc_config.h" IsConfig="true" Hash="LOzeACorZUaKMMCxt+E+5A" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_cmcc_config.h" IsConfig="true" Hash="bmtxQ8rLloaRtAo2HeXZRQ" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_dmac_config.h" IsConfig="true" Hash="mNec32O7w53e4vDmQlvjCA" />
           <AcmeProjectActionInfo Action="File" Source="config/hpl_gclk_config.h" IsConfig="true" Hash="oM7FiKDLUZdwRzAucsYq3A" />
@@ -1349,6 +1349,12 @@
     <Compile Include="robot_motor_mcu_instructions.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="analogsensors.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="analogsensors.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="stdio_redirect\gcc\read.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1365,12 +1371,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="stdio_start.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="analogsensors.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="analogsensors.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="udpserver.c">

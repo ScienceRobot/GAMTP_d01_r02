@@ -114,7 +114,7 @@
 // <e> Advanced Configuration
 // <id> adc_advanced_settings
 #ifndef CONF_ADC_0_ADVANCED
-#define CONF_ADC_0_ADVANCED 0
+#define CONF_ADC_0_ADVANCED 1
 #endif
 
 // <q> Run in standby
@@ -242,7 +242,7 @@
 // <i> Use this parameter to input the bitmask for positive input sequence control (refer to datasheet for the device).
 // <id> adc_arch_seqen
 #ifndef CONF_ADC_0_SEQEN
-#define CONF_ADC_0_SEQEN 0x0
+#define CONF_ADC_0_SEQEN 0x3
 #endif
 
 // </e>
@@ -407,7 +407,7 @@
 // <e> Advanced Configuration
 // <id> adc_advanced_settings
 #ifndef CONF_ADC_1_ADVANCED
-#define CONF_ADC_1_ADVANCED 0
+#define CONF_ADC_1_ADVANCED 1
 #endif
 
 // <q> Run in standby
@@ -535,7 +535,7 @@
 // <i> Use this parameter to input the bitmask for positive input sequence control (refer to datasheet for the device).
 // <id> adc_arch_seqen
 #ifndef CONF_ADC_1_SEQEN
-#define CONF_ADC_1_SEQEN 0x0
+#define CONF_ADC_1_SEQEN 0xcf0
 #endif
 
 // </e>

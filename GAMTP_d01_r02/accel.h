@@ -36,8 +36,8 @@ extern "C" {
 #define TOUCH_SEND_SIZE 80  //size of buffer that is sent to client with touch sensor samples
 
 /* EthAccel Status*/
-#define ACCEL_PCB_STATUS_TOUCH_SENSOR_POLLING 0x1 //polling one or more touch sensors
-#define ACCEL_PCB_STATUS_TOUCH_SENSOR_INTERRUPT 0x2 //touch sensors interrupt
+#define ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING 0x1 //polling one or more touch sensors
+#define ACCEL_PCB_STATUS_ANALOG_SENSOR_INTERRUPT 0x2 //touch sensors interrupt
 //todo: probably do away with the above flag, because touch sensor interrupts are polled with a timer enabling the adc interrupt
 #define ACCEL_PCB_STATUS_ACCEL_POLLING 0x4 //polling one or more accelerometers
 #define ACCEL_PCB_STATUS_ACCEL_INTERRUPT 0x8 //one or more accelerometers is set to send an interrupt

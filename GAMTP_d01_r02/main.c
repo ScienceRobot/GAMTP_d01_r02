@@ -19,6 +19,7 @@
 #include <main.h>
 #include <motor.h>  //motor data structures (motor port values and masks, duration, and program data structure)
 #include <accel.h>  //accelerometer data structures ()
+#include <analogsensors.h>  //analog sensor data structures ()
 #include <utils_ringbuffer.h> //needed for esp-01 usart
 
 #define PCB_NAME_LENGTH 5
@@ -43,6 +44,8 @@ extern uint8_t NumAccelerometers;//
 extern AccelStatus Accel[MAX_NUM_ACCEL]; //status of each accelerometer
 extern AccelPCBStatus APStatus; //status of AccelTouch PCB
 
+uint8_t AnalogSensorSend[ANALOG_SENSOR_SEND_SIZE];  //touch sensor packet data to send back to requester
+uint32_t AnalogSensorSendLen; //length of touch sensor send data packet
 
 
 u32_t sys_now(void)
@@ -279,6 +282,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 	struct io_descriptor *io; //for ESP-01 UART1
 	uint8_t buffer[256]; //temporary buffer
 	uint16_t Sample,Threshold,AccelMask,AccelThreshold;
+	uint32_t AnalogSensorMask;
 		
 	//printf("received at %d, echoing to the same port\n",pcb->local_port);
 	//dst_ip = &(pcb->remote_ip); // this is zero always
@@ -371,6 +375,82 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 				//Get_Accelerometer_Samples();
 
 			break;
+			case ROBOT_ACCELMAGTOUCH_GET_ANALOG_SENSOR_VALUES:
+				//ip[0-3] robot_inst[4] touch sensor mask[5-8]
+				//todo: change to just polling and letting the ADC ISR 
+				//deactivate any accels that are single sample only
+				//then polling, interrupt, and single sample can all operate at the same time.
+				printf("Get analog sensor values");
+
+//				APStatus.flags&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING; //stop any polling
+				//stop interrupt too?
+				memcpy(AnalogSensorSend,InstData,5); //copy IP + inst byte to return instruction
+				AnalogSensorSendLen=5;
+				//touch sensor adc module is currently always on
+				//so just poll the adc?
+				   //the reference manual states to poll AD1IF (not DONE)
+				//reset which pins to sample
+				if (InstLen>=9) {
+					memcpy(&AnalogSensorMask,(uint32_t *)&InstData[5],4);
+					//1=activate, and flags are set for single sample (cleared in ADC ISR))
+					SetActiveAnalogSensors(~AnalogSensorMask,0); //disable any touch sensors not selected
+					SetActiveAnalogSensors(AnalogSensorMask,1); //enable touch sensors that are selected
+				}
+
+				APStatus.flags|=ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING; //start polling
+
+				//start Accel/Touch timer if not started already
+				if (!_timer_is_started(&TIMER_1.device)) {
+					timer_start(&TIMER_1);
+				}
+
+			break;
+#if 0 
+			case ROBOT_ACCELMAGTOUCH_START_POLLING_TOUCH_SENSORS:
+		//        EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_INTERRUPT; //set stop polling flag
+				memcpy(TouchSensorSend,InstData,5); //copy IP + inst byte to return instruction
+				EAStatus.flags|=ETHACCEL_STATUS_TOUCH_SENSOR_POLLING;
+				//set which sensors to poll
+				if (InstDataLen>=9) {
+					memcpy(&TouchSensorMask,(uint32_t *)&InstData[5],4);
+					SetActiveTouchSensors(TouchSensorMask,1); //1=activate
+				}
+				//enable the timer that starts the ADC (and also polls accels)
+				T2CONbits.ON=1; //enable timer2+3 (for 32-bit)
+				//there is no need to enable the interrupt, because it is always enabled
+				//but just to make sure
+				IEC0bits.T3IE=1;        //enable Timer 2+3 interrupt- doesn't enable the timer
+			break;
+			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_TOUCH_SENSORS:
+        
+				EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_POLLING; //set stop polling flag
+        
+				//todo: this will get a 32-bit mask to determine which touch sensors
+				//to stop polling
+				if (InstDataLen>=9) {
+					memcpy(&TouchSensorMask,(uint32_t *)&InstData[5],4);
+					SetActiveTouchSensors(TouchSensorMask,0); //0=deactivate
+				} else {
+					//deactivate all
+					SetActiveTouchSensors(0xffffffff,0); //0=deactivate
+				}
+
+
+				//EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_POLLING; //set stop polling flag
+				//pic32mx IEC1bits.AD1IE=0; //disable AD1 interrupt
+				//pic32mx IFS1bits.AD1IF=0; //clear interrupt flag
+				IEC6bits.ADCEOSIE=0; //disable end of scan interrupt
+				IFS6bits.ADCEOSIF=0; //clear end of scan interrupt flag
+				if (!(EAStatus.flags&ETHACCEL_STATUS_ACCEL_POLLING) &&
+					!(EAStatus.flags&ETHACCEL_STATUS_ACCEL_INTERRUPT) &&
+					!(EAStatus.flags&ETHACCEL_STATUS_TOUCH_SENSOR_INTERRUPT)) {
+					//only stop timer if no touch sensor polling or interrupt is enabled
+					T2CONbits.ON=0; //disable timer2+3 (for 32-bit)
+				} //
+
+			break;
+#endif			
+			
 			} //switch
 
 		} //if (pcb->local_port==UDP_PORT) {

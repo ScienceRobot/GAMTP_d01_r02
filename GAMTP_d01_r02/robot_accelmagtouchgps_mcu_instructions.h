@@ -33,13 +33,13 @@
 #define ROBOT_ACCELMAGTOUCH_SET_HARD_IRON_OFFSET 0x5d  //set the hard iron offset the magnetometer will use
 
 //TOUCH 70-8f
-#define ROBOT_ACCELMAGTOUCH_ENABLE_TOUCH_SENSORS 0x70  //enable the ADC interrupt
-#define ROBOT_ACCELMAGTOUCH_DISABLE_TOUCH_SENSORS 0x71  //disable the ADC interrupt
-#define ROBOT_ACCELMAGTOUCH_GET_TOUCH_SENSOR_VALUES 0x72  //read the voltage on touch sensors (0-3ff=0-3.3v)
-#define ROBOT_ACCELMAGTOUCH_START_POLLING_TOUCH_SENSORS 0x73  //enable the timer interrupt, send sample every 100ms
-#define ROBOT_ACCELMAGTOUCH_STOP_POLLING_TOUCH_SENSORS 0x74  //disable the timer interrupt
-#define ROBOT_ACCELMAGTOUCH_START_TOUCH_SENSORS_INTERRUPT 0x75  //enable the ADC interrupt, send sample whenever large change (depending on threshold) occurs
-#define ROBOT_ACCELMAGTOUCH_STOP_TOUCH_SENSORS_INTERRUPT 0x76  //disable the ADC interrupt
+#define ROBOT_ACCELMAGTOUCH_ENABLE_ANALOG_SENSORS 0x70  //enable the ADC interrupt
+#define ROBOT_ACCELMAGTOUCH_DISABLE_ANALOG_SENSORS 0x71  //disable the ADC interrupt
+#define ROBOT_ACCELMAGTOUCH_GET_ANALOG_SENSOR_VALUES 0x72  //read the voltage on touch sensors (0-3ff=0-3.3v)
+#define ROBOT_ACCELMAGTOUCH_START_POLLING_ANALOG_SENSORS 0x73  //enable the timer interrupt, send sample every 100ms
+#define ROBOT_ACCELMAGTOUCH_STOP_POLLING_ANALOG_SENSORS 0x74  //disable the timer interrupt
+#define ROBOT_ACCELMAGTOUCH_START_ANALOG_SENSORS_INTERRUPT 0x75  //enable the ADC interrupt, send sample whenever large change (depending on threshold) occurs
+#define ROBOT_ACCELMAGTOUCH_STOP_ANALOG_SENSORS_INTERRUPT 0x76  //disable the ADC interrupt
 #define ROBOT_ACCELMAGTOUCH_GET_TOUCH_SENSOR_THRESHOLD 0x77 //get the threshold for 1 or more touch sensor
 #define ROBOT_ACCELMAGTOUCH_SET_TOUCH_SENSOR_THRESHOLD 0x78 //set the threshold for 1 or more touch sensor (.1v=
 //(1 bit=0.003225806v, .1v=31 0x1f)
