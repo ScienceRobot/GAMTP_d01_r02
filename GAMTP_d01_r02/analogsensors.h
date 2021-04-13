@@ -25,9 +25,21 @@ typedef struct {
     uint16_t    Min; //Maximum Sample (voltage) recorded so far (used to calibrate touch sensor voltage range)
     //volatile unsigned int *ADCBuf; //Touch sensor ADCBuffer address
 	uint16_t	Sample;  //latest Analog Sensor sample
+	uint8_t		ADCNum; //which ADC 0 or 1
+	struct adc_async_descriptor *ADC; //address of which ADC (ex: &ADC_0, &ADC_1)
 } AnalogSensorStatus;
+
+#define ANALOG_SENSOR_PCB_STATUS_ANALOG_SENSOR_POLLING 0x01
+typedef struct {
+	uint32_t flags;
+	uint8_t ReturnIP[5];  //return instructions IP
+	struct udp_pcb *pcb;
+	struct ip_addr *addr;
+}AnalogSensorPCBStatus;
 
 uint8_t Initialize_AnalogSensors(void);
 uint8_t SetActiveAnalogSensors(uint32_t mask,int Activate);
+uint8_t Get_AnalogSensor_Samples(void);
+uint8_t SendAnalogSensorUDPPacket(void);
 
 #endif //ANALOGSENSORS_H

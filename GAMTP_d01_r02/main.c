@@ -42,10 +42,11 @@ extern u8_t LWIP_MACIF_hwaddr[6];
 extern uint8_t AccelTimerSend[ACCEL_POLL_SEND_SIZE];  //accel polling and interrupt packet data to send back to requester
 extern uint8_t NumAccelerometers;//
 extern AccelStatus Accel[MAX_NUM_ACCEL]; //status of each accelerometer
-extern AccelPCBStatus APStatus; //status of AccelTouch PCB
+extern AccelPCBStatus APStatus; //status of Accelerometer/Gyroscope PCB
+extern AnalogSensorPCBStatus ASPStatus; //status of AnalogSensor PCB
 
-uint8_t AnalogSensorSend[ANALOG_SENSOR_SEND_SIZE];  //touch sensor packet data to send back to requester
-uint32_t AnalogSensorSendLen; //length of touch sensor send data packet
+//uint8_t AnalogSensorSend[ANALOG_SENSOR_SEND_SIZE];  //touch sensor packet data to send back to requester
+//uint32_t AnalogSensorSendLen; //length of touch sensor send data packet
 
 
 u32_t sys_now(void)
@@ -380,12 +381,13 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 				//todo: change to just polling and letting the ADC ISR 
 				//deactivate any accels that are single sample only
 				//then polling, interrupt, and single sample can all operate at the same time.
-				printf("Get analog sensor values");
+				//printf("Get analog sensor values");
 
 //				APStatus.flags&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING; //stop any polling
 				//stop interrupt too?
-				memcpy(AnalogSensorSend,InstData,5); //copy IP + inst byte to return instruction
-				AnalogSensorSendLen=5;
+				ASPStatus.pcb=pcb;  //save pcb
+				ASPStatus.addr=addr;  //save addr
+				memcpy(ASPStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
 				//touch sensor adc module is currently always on
 				//so just poll the adc?
 				   //the reference manual states to poll AD1IF (not DONE)
@@ -397,12 +399,13 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 					SetActiveAnalogSensors(AnalogSensorMask,1); //enable touch sensors that are selected
 				}
 
-				APStatus.flags|=ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING; //start polling
+				//ASPStatus.flags|=ANALOG_SENSOR_PCB_STATUS_ANALOG_SENSOR_POLLING; //start polling
 
 				//start Accel/Touch timer if not started already
-				if (!_timer_is_started(&TIMER_1.device)) {
-					timer_start(&TIMER_1);
-				}
+				//if (!_timer_is_started(&TIMER_1.device)) {
+				//	timer_start(&TIMER_1);
+				//}
+				adc_async_start_conversion(&ADC_0);
 
 			break;
 #if 0 
@@ -633,6 +636,7 @@ int main(void)
 
 	InitializeMotors(); //set initial settings of all motors
 	InitializeAccels(); //set initial settings of all accelerometers
+	Initialize_AnalogSensors(); //set initial settings of all analog sensors
 	
 	//currently motor timer stop DHCP from working
 	MotorTimer_Initialize();  //initialize and start timer for motor pwm

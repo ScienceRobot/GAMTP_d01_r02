@@ -1,7 +1,8 @@
 //analogsensors.c - Touch Sensors functions
 
 #include <hal_adc_async.h>
-
+#include <lwip/udp.h>
+#include "main.h"
 #include "analogsensors.h"
 //#include "app.h"
 
@@ -9,11 +10,12 @@
 uint8_t NumAnalogSensors,NumActiveAnalogSensors;
 AnalogSensorStatus AnalogSensor[MAX_NUM_ANALOG_SENSORS]; //status of each analog sensor
 uint8_t ActiveAnalogSensor[MAX_NUM_ANALOG_SENSORS]; //list of all active analog sensors in order, for a quick reference
+AnalogSensorPCBStatus ASPStatus;
 
 extern uint8_t NumAnalogSensors,NumActiveAnalogSensors;
 extern AnalogSensorStatus AnalogSensor[MAX_NUM_ANALOG_SENSORS]; //status of each touch sensor
 extern uint8_t ActiveAnalogSensor[MAX_NUM_ANALOG_SENSORS]; //list of all active touch sensors in order, for a quick reference
-extern uint8_t AnalogSensorSend[ANALOG_SENSOR_SEND_SIZE];  //touch sensor packet data to send back to requester
+//extern uint8_t AnalogSensorSend[ANALOG_SENSOR_SEND_SIZE];  //touch sensor packet data to send back to requester
 
 extern struct adc_async_descriptor         ADC_0;
 extern struct adc_async_descriptor         ADC_1;
@@ -29,10 +31,10 @@ static void ADC_0_convert_cb(const struct adc_async_descriptor *const descr, con
 	memset(buf_adc, 0x00, sizeof(buf_adc));
 	bytes_read = adc_async_read_channel(&ADC_0, 0, (uint8_t *)&buf_adc, 4);
 
-	AnalogSensor[0].Sample = (buf_adc[1] << 8) + buf_adc[0];
-	AnalogSensor[1].Sample = (buf_adc[3] << 8) + buf_adc[2];
+	AnalogSensor[4].Sample = (buf_adc[1] << 8) + buf_adc[0];
+	AnalogSensor[5].Sample = (buf_adc[3] << 8) + buf_adc[2];
 
-	printf("%x %x ",AnalogSensor[0].Sample,AnalogSensor[1].Sample);
+	printf("%x %x ",AnalogSensor[4].Sample,AnalogSensor[5].Sample);
 
 //	battery_voltage_mv = adc_value_channel_0 * VREF_V_2V5 * BAT_DIV_V / RESOLUTION_12_BIT;
 //	general_battery_voltage_mv = adc_value_channel_7 * VREF_V_2V5 * GENERAL_BAT_DIV_V / RESOLUTION_12_BIT;
@@ -51,7 +53,7 @@ uint8_t Initialize_AnalogSensors(void)
     uint8_t i;
 
     //clear the packet we send to whoever requests touch sensor data
-    memset(AnalogSensorSend,0,sizeof(ANALOG_SENSOR_SEND_SIZE));
+//    memset(AnalogSensorSend,0,sizeof(ANALOG_SENSOR_SEND_SIZE));
 
     //Touch Sensors
     NumAnalogSensors=8;
@@ -60,16 +62,16 @@ uint8_t Initialize_AnalogSensors(void)
 
 	//enable ADC0 channels
 	adc_async_enable_channel(&ADC_0, 0); //AN4
-	adc_async_enable_channel(&ADC_0, 1);  //AN5
+	//adc_async_enable_channel(&ADC_0, 1);  //AN5
 	adc_async_register_callback(&ADC_0, 0, ADC_ASYNC_CONVERT_CB, ADC_0_convert_cb);
 
 	//enable ADC1 channels
-	adc_async_enable_channel(&ADC_1, 4);
-	adc_async_enable_channel(&ADC_1, 5);
+	adc_async_enable_channel(&ADC_1, 0);
+/*	adc_async_enable_channel(&ADC_1, 5);
 	adc_async_enable_channel(&ADC_1, 6);
 	adc_async_enable_channel(&ADC_1, 7);
 	adc_async_enable_channel(&ADC_1, 10);
-	adc_async_enable_channel(&ADC_1, 11);
+	adc_async_enable_channel(&ADC_1, 11);*/
 	adc_async_register_callback(&ADC_1, 0, ADC_ASYNC_CONVERT_CB, ADC_1_convert_cb);
 
 
@@ -78,6 +80,27 @@ uint8_t Initialize_AnalogSensors(void)
     
     for(i=0;i<NumAnalogSensors;i++) {
         AnalogSensor[i].Threshold=DEFAULT_ANALOG_THRESHOLD;
+#if 0 
+		switch(i) {
+			case 4:
+			case 5:
+				AnalogSensor[i].ADC=&ADC_0;
+				AnalogSensor[i].ADCNum=0;
+				break;
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 6:
+			case 7:
+				AnalogSensor[i].ADC=&ADC_1;
+				AnalogSensor[i].ADCNum=1;
+				break;
+			default:
+				printf("Unknown AnalogSensor %d\n",i);	
+		} //switch(i)
+
+#endif		
         //set min and max voltage for touch sensor to calibrate itself
         //note .Max is already set to 0
         //pic32mx is 10bit, pic32mz is 12bit = 0 to fff (/4096)
@@ -96,7 +119,6 @@ uint8_t Initialize_AnalogSensors(void)
 
     } //for i
     //need SensorBitMask?
-
 
     return(1);
 } //uint8_t Initialize_AnalogSensors(void)
@@ -158,3 +180,65 @@ uint8_t SetActiveAnalogSensors(uint32_t mask,int Activate)
 } //uint8_t SetActiveAnalogSensors(uint32_t mask,int Activate)
 
 
+//Get_AnalogSensor_Samples
+//This function is called by the (10ms) timer 
+//to 1) building the return UDP packet)
+//and 2) reading the analog sensors
+uint8_t Get_AnalogSensor_Samples(void) {
+    uint8_t i,RegAddr;
+    uint8_t ReturnValue,result;
+	uint8_t bytes_read;
+	uint8_t buf_adc[4]; //a buffer to be able to read 2 channels with 12bit resolution
+ 	  
+	  
+#if 0 	 
+	//get sample
+	memset(buf_adc, 0x00, sizeof(buf_adc));
+
+	if ((AnalogSensor[4].flags&ANALOG_SENSOR_STATUS_ACTIVE) || (AnalogSensor[5].flags&ANALOG_SENSOR_STATUS_ACTIVE)) {						
+		bytes_read = adc_async_read_channel(AnalogSensor[i].ADC, 0, (uint8_t *)&buf_adc, 4);
+
+		AnalogSensor[4].Sample = (buf_adc[1] << 8) + buf_adc[0];
+		AnalogSensor[5].Sample = (buf_adc[3] << 8) + buf_adc[2];
+
+		printf("%x %x ",AnalogSensor[4].Sample,AnalogSensor[5].Sample);
+	}
+			
+	SendAnalogSensorUDPPacket(); //send UDF packet with accel data
+#endif
+    return(1);
+} //uint8_t Get_AnalogSensor_Samples(void) {
+
+
+uint8_t SendAnalogSensorUDPPacket(void) {
+	uint8_t *ReturnInst; //currently just 50 bytes but probably will change
+	struct pbuf *retbuf;  //return buffer
+	uint32_t ReturnInstLen, bufcount;
+	uint8_t buffer[256]; //temporary buffer
+	int i;
+
+	//determine return buffer size
+	bufcount=NumActiveAnalogSensors*2;  //16 bit samples
+	
+	retbuf = pbuf_alloc(PBUF_TRANSPORT, 5+bufcount, PBUF_RAM);
+	ReturnInst=retbuf->payload;
+	memcpy(ReturnInst,ASPStatus.ReturnIP,5); //copy IP + inst byte to return instruction
+	
+
+	bufcount=0;
+    for(i=0;i<NumAnalogSensors;i++) {
+	    if (AnalogSensor[i].flags&ANALOG_SENSOR_STATUS_ACTIVE) {
+			ReturnInst[5+bufcount++]=AnalogSensor[i].Sample&0xff;
+			ReturnInst[5+bufcount++]=AnalogSensor[i].Sample>>8;				
+		} //AnalogSensor[i].flag&ANALOG_SENSOR_STATUS_ACTIVE
+	} //for i
+	
+
+    if (bufcount>0) {
+        //send the UDP packet
+		udp_sendto(ASPStatus.pcb, retbuf, ASPStatus.addr, UDP_PORT); //dest port
+		pbuf_free(retbuf);
+      
+    } //if (AccelTimerSendLen>5) {
+    return(1);
+}

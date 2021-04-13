@@ -12,6 +12,7 @@
 #include "robot_accelmagtouchgps_mcu_instructions.h"
 #include <lwip/udp.h>
 #include "main.h"
+#include "analogsensors.h"
 
 //Accel variables
 uint8_t NumAccelerometers;//
@@ -52,7 +53,7 @@ extern uint32_t TouchSendLen; //length of touch sensor send data packet
 
 extern struct adc_async_descriptor         ADC_0;
 extern struct adc_async_descriptor         ADC_1;
-
+extern AnalogSensorPCBStatus ASPStatus;
 
 static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 {
@@ -79,9 +80,11 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 		    
 	} //if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_INTERRUPT) {
 
-	if (APStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)  {
+	if (ASPStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)  {
 		//Start ADC conversion (will call callback function once complete)
 		adc_async_start_conversion(&ADC_0);
+		//Get_AnalogSensor_Samples();
+
 		//adc_async_start_conversion(&ADC_1);
 //		if (APStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_SINGLE_SAMPLE) {
 //			APStatus&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_SINGLE_SAMPLE;
