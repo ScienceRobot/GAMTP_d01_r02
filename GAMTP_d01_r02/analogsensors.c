@@ -33,8 +33,12 @@ static void ADC_0_convert_cb(const struct adc_async_descriptor *const descr, con
 
 	AnalogSensor[4].Sample = (buf_adc[1] << 8) + buf_adc[0];
 	AnalogSensor[5].Sample = (buf_adc[3] << 8) + buf_adc[2];
+	
+//	memset(buf_adc, 0x00, sizeof(buf_adc));
+//	bytes_read = adc_async_read_channel(&ADC_0, 1, (uint8_t *)&buf_adc, 2);
+//	AnalogSensor[5].Sample = (buf_adc[1] << 8) + buf_adc[0];
 
-	printf("%x %x ",AnalogSensor[4].Sample,AnalogSensor[5].Sample);
+	printf("bytes=%d ADC0 %x %x ",bytes_read,AnalogSensor[4].Sample,AnalogSensor[5].Sample);
 
 //	battery_voltage_mv = adc_value_channel_0 * VREF_V_2V5 * BAT_DIV_V / RESOLUTION_12_BIT;
 //	general_battery_voltage_mv = adc_value_channel_7 * VREF_V_2V5 * GENERAL_BAT_DIV_V / RESOLUTION_12_BIT;
@@ -44,6 +48,22 @@ static void ADC_0_convert_cb(const struct adc_async_descriptor *const descr, con
 static void ADC_1_convert_cb(const struct adc_async_descriptor *const descr, const uint8_t channel)
 {
 	//copy sample
+	uint8_t bytes_read;
+	uint8_t buf_adc[12]; //a buffer to be able to read 2 channels with 12bit resolution
+	
+	//copy sample
+	memset(buf_adc, 0x00, sizeof(buf_adc));
+	bytes_read = adc_async_read_channel(&ADC_1, 0, (uint8_t *)&buf_adc, 12);
+
+	AnalogSensor[2].Sample = (buf_adc[1] << 8) + buf_adc[0];
+	AnalogSensor[3].Sample = (buf_adc[3] << 8) + buf_adc[2];
+	AnalogSensor[6].Sample = (buf_adc[5] << 8) + buf_adc[4];
+	AnalogSensor[7].Sample = (buf_adc[7] << 8) + buf_adc[6];
+	AnalogSensor[0].Sample = (buf_adc[9] << 8) + buf_adc[8];
+	AnalogSensor[1].Sample = (buf_adc[11] << 8) + buf_adc[10];
+
+	printf("ADC1 %x %x %x %x %x %x ",AnalogSensor[2].Sample,AnalogSensor[3].Sample,AnalogSensor[6].Sample,AnalogSensor[7].Sample,AnalogSensor[0].Sample,AnalogSensor[1].Sample);
+
 }
 
 

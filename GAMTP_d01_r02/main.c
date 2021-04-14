@@ -406,6 +406,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 				//	timer_start(&TIMER_1);
 				//}
 				adc_async_start_conversion(&ADC_0);
+				adc_async_start_conversion(&ADC_1);
 
 			break;
 #if 0 

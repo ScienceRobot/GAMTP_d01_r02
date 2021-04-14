@@ -82,6 +82,7 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 
 	if (ASPStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)  {
 		//Start ADC conversion (will call callback function once complete)
+		adc_async_start_conversion(&ADC_1);
 		adc_async_start_conversion(&ADC_0);
 		//Get_AnalogSensor_Samples();
 
