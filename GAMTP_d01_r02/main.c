@@ -385,8 +385,8 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 
 //				APStatus.flags&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING; //stop any polling
 				//stop interrupt too?
-				ASPStatus.pcb=pcb;  //save pcb
-				ASPStatus.addr=addr;  //save addr
+				memcpy(&ASPStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+				memcpy(&ASPStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 				memcpy(ASPStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
 				//touch sensor adc module is currently always on
 				//so just poll the adc?
@@ -399,16 +399,52 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 					SetActiveAnalogSensors(AnalogSensorMask,1); //enable touch sensors that are selected
 				}
 
+				Get_AnalogSensor_Samples();
 				//ASPStatus.flags|=ANALOG_SENSOR_PCB_STATUS_ANALOG_SENSOR_POLLING; //start polling
 
 				//start Accel/Touch timer if not started already
 				//if (!_timer_is_started(&TIMER_1.device)) {
 				//	timer_start(&TIMER_1);
 				//}
-				adc_async_start_conversion(&ADC_0);
-				adc_async_start_conversion(&ADC_1);
+			break;
+			case ROBOT_ACCELMAGTOUCH_START_POLLING_ANALOG_SENSORS:
+				printf("Start polling analog sensors");
+
+				ASPStatus.flags|=ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING;
+				memcpy(&ASPStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+				memcpy(&ASPStatus.addr,addr,sizeof(struct ip_addr));  //save addr
+				memcpy(ASPStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
+				if (InstLen>=9) {
+					memcpy(&AnalogSensorMask,(uint32_t *)&InstData[5],4);
+					//1=activate, and flags are set for single sample (cleared in ADC ISR))
+					SetActiveAnalogSensors(~AnalogSensorMask,0); //disable any touch sensors not selected
+					SetActiveAnalogSensors(AnalogSensorMask,1); //enable touch sensors that are selected
+				}
+
+				//todo: make timer just for analog sensors
+				//start Accel/Touch timer if not started already
+				if (!_timer_is_started(&TIMER_1.device)) {
+					timer_start(&TIMER_1);
+				}
 
 			break;
+			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_ANALOG_SENSORS:
+				printf("Stop polling analog sensors");
+				ASPStatus.flags&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING;
+				memcpy(&ASPStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+				memcpy(&ASPStatus.addr,addr,sizeof(struct ip_addr));  //save addr
+				memcpy(ASPStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
+				if (InstLen>=9) {
+					memcpy(&AnalogSensorMask,(uint32_t *)&InstData[5],4);
+					//1=activate, and flags are set for single sample (cleared in ADC ISR))
+					SetActiveAnalogSensors(~AnalogSensorMask,0); //disable any touch sensors not selected
+					SetActiveAnalogSensors(AnalogSensorMask,1); //enable touch sensors that are selected
+				}
+				if (!(APStatus.flags&ACCEL_PCB_STATUS_ACCEL_POLLING) && !(ASPStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)) {
+					timer_stop(&TIMER_1);
+				}
+			break;
+
 #if 0 
 			case ROBOT_ACCELMAGTOUCH_START_POLLING_TOUCH_SENSORS:
 		//        EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_INTERRUPT; //set stop polling flag
@@ -631,7 +667,6 @@ int main(void)
 
 	mac_async_register_callback(&ETHERNET_MAC_0, MAC_ASYNC_RECEIVE_CB, (FUNC_PTR)mac_receive_cb);
 	mac_async_register_callback(&ETHERNET_MAC_0, MAC_ASYNC_TRANSMIT_CB, (FUNC_PTR)mac_transmit_cb);
-
 
 	CheckWired();
 

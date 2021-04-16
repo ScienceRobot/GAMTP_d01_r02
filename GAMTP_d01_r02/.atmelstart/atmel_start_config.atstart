@@ -7,7 +7,7 @@ versions:
   content: unknown
   content_pack_name: unknown
   format: '2'
-  frontend: 1.8.491
+  frontend: 1.8.543
   packs_version_avr8: 1.0.1457
   packs_version_qtouch: unknown
   packs_version_sam: 1.0.1726
@@ -46,11 +46,11 @@ middlewares:
 drivers:
   ADC_0:
     user_label: ADC_0
-    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::ADC0::driver_config_definition::ADC::HAL:Driver:ADC.Async
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::ADC0::driver_config_definition::ADC::HAL:Driver:ADC.Sync
     functionality: ADC
-    api: HAL:Driver:ADC_Async
+    api: HAL:Driver:ADC_Sync
     configuration:
-      adc_advanced_settings: true
+      adc_advanced_settings: false
       adc_arch_adjres: 0
       adc_arch_corren: false
       adc_arch_dbgrun: false
@@ -108,11 +108,11 @@ drivers:
           adc_gclk_selection: Generic clock generator 1
   ADC_1:
     user_label: ADC_1
-    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::ADC1::driver_config_definition::ADC::HAL:Driver:ADC.Async
+    definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::ADC1::driver_config_definition::ADC::HAL:Driver:ADC.Sync
     functionality: ADC
-    api: HAL:Driver:ADC_Async
+    api: HAL:Driver:ADC_Sync
     configuration:
-      adc_advanced_settings: true
+      adc_advanced_settings: false
       adc_arch_adjres: 0
       adc_arch_corren: false
       adc_arch_dbgrun: false

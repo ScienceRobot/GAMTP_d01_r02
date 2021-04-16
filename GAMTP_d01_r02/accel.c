@@ -51,8 +51,6 @@ extern uint32_t AccelTimerSendLen; //length of touch sensor send data packet
 extern uint8_t TouchSend[TOUCH_SEND_SIZE];  //touch sensor packet data to send back to requester
 extern uint32_t TouchSendLen; //length of touch sensor send data packet
 
-extern struct adc_async_descriptor         ADC_0;
-extern struct adc_async_descriptor         ADC_1;
 extern AnalogSensorPCBStatus ASPStatus;
 
 static void AccelTimerTask_cb(const struct timer_task *const timer_task)
@@ -82,9 +80,9 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 
 	if (ASPStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)  {
 		//Start ADC conversion (will call callback function once complete)
-		adc_async_start_conversion(&ADC_1);
-		adc_async_start_conversion(&ADC_0);
-		//Get_AnalogSensor_Samples();
+		//adc_async_start_conversion(&ADC_1);
+		//adc_async_start_conversion(&ADC_0);
+		Get_AnalogSensor_Samples();
 
 		//adc_async_start_conversion(&ADC_1);
 //		if (APStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_SINGLE_SAMPLE) {

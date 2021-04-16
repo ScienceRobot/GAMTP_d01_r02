@@ -114,7 +114,7 @@
 // <e> Advanced Configuration
 // <id> adc_advanced_settings
 #ifndef CONF_ADC_0_ADVANCED
-#define CONF_ADC_0_ADVANCED 1
+#define CONF_ADC_0_ADVANCED 0
 #endif
 
 // <q> Run in standby
@@ -407,7 +407,7 @@
 // <e> Advanced Configuration
 // <id> adc_advanced_settings
 #ifndef CONF_ADC_1_ADVANCED
-#define CONF_ADC_1_ADVANCED 1
+#define CONF_ADC_1_ADVANCED 0
 #endif
 
 // <q> Run in standby

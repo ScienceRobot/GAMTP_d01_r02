@@ -14,40 +14,31 @@
 #include <hpl_adc_base.h>
 #include <hpl_adc_base.h>
 
-/* The channel amount for ADC */
-#define ADC_0_CH_AMOUNT 1
+/*! The buffer size for USART */
+#define USART_1_BUFFER_SIZE 16
 
-/* The buffer size for ADC */
-#define ADC_0_BUFFER_SIZE 16
+struct usart_async_descriptor USART_1;
+struct timer_descriptor       TIMER_0;
+struct timer_descriptor       TIMER_1;
 
-/* The maximal channel number of enabled channels */
-#define ADC_0_CH_MAX 0
+static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
-/* The channel amount for ADC */
-#define ADC_1_CH_AMOUNT 1
+struct adc_sync_descriptor ADC_0;
 
-/* The buffer size for ADC */
-#define ADC_1_BUFFER_SIZE 16
-
-/* The maximal channel number of enabled channels */
-#define ADC_1_CH_MAX 0
+struct adc_sync_descriptor ADC_1;
 
 /*! The buffer size for USART */
 #define USART_1_BUFFER_SIZE 256
 
-struct adc_async_descriptor         ADC_0;
-struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
-struct adc_async_descriptor         ADC_1;
-struct adc_async_channel_descriptor ADC_1_ch[ADC_1_CH_AMOUNT];
 struct usart_async_descriptor       USART_1;
 struct timer_descriptor             TIMER_0;
 struct timer_descriptor             TIMER_1;
 
-static uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
-static uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
-static uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
-static uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
-static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
+uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
+uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
+uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
+uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
+uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct usart_sync_descriptor USART_0;
 
@@ -64,7 +55,12 @@ void ADC_0_init(void)
 {
 	hri_mclk_set_APBDMASK_ADC0_bit(MCLK);
 	hri_gclk_write_PCHCTRL_reg(GCLK, ADC0_GCLK_ID, CONF_GCLK_ADC0_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+	ADC_0_map[0]=0;
+	ADC_0_map[1]=1;
 	adc_async_init(&ADC_0, ADC0, ADC_0_map, ADC_0_CH_MAX, ADC_0_CH_AMOUNT, &ADC_0_ch[0], (void *)NULL);
+	
+	//adc_async_set_inputs(&ADC_0,)
+
 	adc_async_register_channel_buffer(&ADC_0, 0, ADC_0_buffer, ADC_0_BUFFER_SIZE);
 
 	// Disable digital pin circuitry
@@ -242,10 +238,10 @@ static void TIMER_0_init(void)
  */
 static void TIMER_1_init(void)
 {
-	hri_mclk_set_APBAMASK_TC1_bit(MCLK);
-	hri_gclk_write_PCHCTRL_reg(GCLK, TC1_GCLK_ID, CONF_GCLK_TC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+	hri_mclk_set_APBBMASK_TC2_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, TC2_GCLK_ID, CONF_GCLK_TC2_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
 
-	timer_init(&TIMER_1, TC1, _tc_get_timer());
+	timer_init(&TIMER_1, TC2, _tc_get_timer());
 }
 
 void ETHERNET_MAC_0_PORT_init(void)

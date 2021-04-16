@@ -18,23 +18,23 @@
 typedef struct {
     uint8_t    flags; //flags for accelerometer status
     uint16_t    Threshold; //threshold for this touch sensor (in interrupt mode, how much the value an change before sending a UDP packet, 255 allows a max change of .82v)
-    uint16_t    SensorBit; // PORTB bit# to receive current sense on
-    uint16_t    SensorBitMask; //mask to or/and portb pins with
+	uint8_t		ChannelNum; //0, 1, 2, etc. which channel
+//    uint16_t    SensorBit; // PORTB bit# to receive current sense on
+//    uint16_t    SensorBitMask; //mask to or/and portb pins with
     uint16_t    LastSample; //Last Sample- to compare the current sample to see if there was enough change to send a UDP packet (using touch sensor interrupt mode)
     uint16_t    Max; //Maximum Sample (voltage) recorded so far (used to calibrate touch sensor voltage range)
     uint16_t    Min; //Maximum Sample (voltage) recorded so far (used to calibrate touch sensor voltage range)
     //volatile unsigned int *ADCBuf; //Touch sensor ADCBuffer address
 	uint16_t	Sample;  //latest Analog Sensor sample
 	uint8_t		ADCNum; //which ADC 0 or 1
-	struct adc_async_descriptor *ADC; //address of which ADC (ex: &ADC_0, &ADC_1)
 } AnalogSensorStatus;
 
 #define ANALOG_SENSOR_PCB_STATUS_ANALOG_SENSOR_POLLING 0x01
 typedef struct {
 	uint32_t flags;
 	uint8_t ReturnIP[5];  //return instructions IP
-	struct udp_pcb *pcb;
-	struct ip_addr *addr;
+	struct udp_pcb pcb;
+	struct ip_addr addr;
 }AnalogSensorPCBStatus;
 
 uint8_t Initialize_AnalogSensors(void);

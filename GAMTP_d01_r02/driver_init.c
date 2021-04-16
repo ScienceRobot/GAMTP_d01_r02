@@ -14,39 +14,22 @@
 #include <hpl_adc_base.h>
 #include <hpl_adc_base.h>
 
-/* The channel amount for ADC */
-#define ADC_0_CH_AMOUNT 1
 
-/* The buffer size for ADC */
-#define ADC_0_BUFFER_SIZE 16
+struct usart_async_descriptor USART_1;
+struct timer_descriptor       TIMER_0;
+struct timer_descriptor       TIMER_1;
 
-/* The maximal channel number of enabled channels */
-#define ADC_0_CH_MAX 0
+struct adc_sync_descriptor ADC_0;
 
-/* The channel amount for ADC */
-#define ADC_1_CH_AMOUNT 1
-
-/* The buffer size for ADC */
-#define ADC_1_BUFFER_SIZE 16
-
-/* The maximal channel number of enabled channels */
-#define ADC_1_CH_MAX 0
+struct adc_sync_descriptor ADC_1;
 
 /*! The buffer size for USART */
 #define USART_1_BUFFER_SIZE 256
 
-struct adc_async_descriptor         ADC_0;
-struct adc_async_channel_descriptor ADC_0_ch[ADC_0_CH_AMOUNT];
-struct adc_async_descriptor         ADC_1;
-struct adc_async_channel_descriptor ADC_1_ch[ADC_1_CH_AMOUNT];
 struct usart_async_descriptor       USART_1;
 struct timer_descriptor             TIMER_0;
 struct timer_descriptor             TIMER_1;
 
-uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
-uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
-uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
-uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
 uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct usart_sync_descriptor USART_0;
@@ -55,19 +38,9 @@ struct i2c_m_sync_desc I2C_0;
 
 struct mac_async_descriptor ETHERNET_MAC_0;
 
-/**
- * \brief ADC initialization function
- *
- * Enables ADC peripheral, clocks and initializes ADC driver
- */
-void ADC_0_init(void)
+void ADC_0_PORT_init(void)
 {
-	hri_mclk_set_APBDMASK_ADC0_bit(MCLK);
-	hri_gclk_write_PCHCTRL_reg(GCLK, ADC0_GCLK_ID, CONF_GCLK_ADC0_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
-	adc_async_init(&ADC_0, ADC0, ADC_0_map, ADC_0_CH_MAX, ADC_0_CH_AMOUNT, &ADC_0_ch[0], (void *)NULL);
-	adc_async_register_channel_buffer(&ADC_0, 0, ADC_0_buffer, ADC_0_BUFFER_SIZE);
-
-	// Disable digital pin circuitry
+		// Disable digital pin circuitry
 	gpio_set_pin_direction(PA02, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PA02, PINMUX_PA02B_ADC0_AIN0);
@@ -78,18 +51,21 @@ void ADC_0_init(void)
 	gpio_set_pin_function(PA03, PINMUX_PA03B_ADC0_AIN1);
 }
 
-/**
- * \brief ADC initialization function
- *
- * Enables ADC peripheral, clocks and initializes ADC driver
- */
-void ADC_1_init(void)
+void ADC_0_CLOCK_init(void)
 {
-	hri_mclk_set_APBDMASK_ADC1_bit(MCLK);
-	hri_gclk_write_PCHCTRL_reg(GCLK, ADC1_GCLK_ID, CONF_GCLK_ADC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
-	adc_async_init(&ADC_1, ADC1, ADC_1_map, ADC_1_CH_MAX, ADC_1_CH_AMOUNT, &ADC_1_ch[0], (void *)NULL);
-	adc_async_register_channel_buffer(&ADC_1, 0, ADC_1_buffer, ADC_1_BUFFER_SIZE);
+	hri_mclk_set_APBDMASK_ADC0_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, ADC0_GCLK_ID, CONF_GCLK_ADC0_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+}
 
+void ADC_0_init(void)
+{
+	ADC_0_CLOCK_init();
+	ADC_0_PORT_init();
+	adc_sync_init(&ADC_0, ADC0, (void *)NULL);
+}
+
+void ADC_1_PORT_init(void)
+{
 	// Disable digital pin circuitry
 	gpio_set_pin_direction(PC02, GPIO_DIRECTION_OFF);
 
@@ -119,6 +95,19 @@ void ADC_1_init(void)
 	gpio_set_pin_direction(PC01, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PC01, PINMUX_PC01B_ADC1_AIN11);
+}
+
+void ADC_1_CLOCK_init(void)
+{
+	hri_mclk_set_APBDMASK_ADC1_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, ADC1_GCLK_ID, CONF_GCLK_ADC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+}
+
+void ADC_1_init(void)
+{
+	ADC_1_CLOCK_init();
+	ADC_1_PORT_init();
+	adc_sync_init(&ADC_1, ADC1, (void *)NULL);
 }
 
 void USART_0_PORT_init(void)
