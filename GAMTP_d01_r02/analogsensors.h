@@ -3,6 +3,11 @@
 #define	ANALOGSENSORS_H
 
 #include <stdint.h>  //for uint8_t
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <lwip/udp.h>
+#include <lwip/ip_addr.h>
 
 #define ANALOG_SENSOR_SEND_SIZE 50
 

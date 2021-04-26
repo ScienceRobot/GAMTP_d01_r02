@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <lwip/udp.h>
+#include <lwip/ip_addr.h>
 
 //#include "driver/driver_common.h" //for DRV_HANDLE
 //#include "driver/i2c/drv_i2c.h" //for DRV_I2C_BUFFER_HANDLE and EVENT
@@ -46,8 +48,8 @@ extern "C" {
 typedef struct {
 	uint32_t flags;
 	uint8_t ReturnIP[5];  //return instructions IP
-	struct udp_pcb *pcb;
-	struct ip_addr *addr;
+	struct udp_pcb pcb;
+	struct ip_addr addr;
 }AccelPCBStatus;
 
 

@@ -409,7 +409,7 @@
  * \brief TC2's Clock frequency
  */
 #ifndef CONF_GCLK_TC2_FREQUENCY
-#define CONF_GCLK_TC2_FREQUENCY 100000
+#define CONF_GCLK_TC2_FREQUENCY 1000000
 #endif
 
 // <<< end of configuration section >>>

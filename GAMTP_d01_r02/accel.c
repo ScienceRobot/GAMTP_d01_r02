@@ -95,7 +95,9 @@ static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 } //static void AccelTimerTask_cb(const struct timer_task *const timer_task)
 
 
-//TIMER_1 uses the TC1 peripheral which takes as input a 100kHz generic clock which creates an interrupt 
+//TIMER_1 uses the TC2 peripheral 
+//which takes DPLL0 as input (120Mhz) divided down to 1Mhz, somehow the timer goes every 10ms (100Hz)
+//was: which takes as input a 100kHz generic clock which creates an interrupt 
 //every 10ms (100hz) to get readings and send over UDP
 //NOTE: TIMER INTERRUPTS CAN DISRUPT DHCP
 //NOTE: TC2 needs to be used for 32bit timers presumably use both TC0 and TC1
@@ -623,7 +625,7 @@ uint8_t SendTimerUDPPacket(void) {
 
     if (bufcount>0) {
         //send the UDP packet
-		udp_sendto(APStatus.pcb, retbuf, APStatus.addr, UDP_PORT); //dest port
+		udp_sendto(&APStatus.pcb, retbuf, &APStatus.addr, UDP_PORT); //dest port
 		pbuf_free(retbuf);
       
     } //if (AccelTimerSendLen>5) {

@@ -754,16 +754,16 @@ drivers:
     functionality: System
     api: HAL:HPL:GCLK
     configuration:
-      $input: 12000000
-      $input_id: External Crystal Oscillator 8-48MHz (XOSC1)
-      RESERVED_InputFreq: 12000000
-      RESERVED_InputFreq_id: External Crystal Oscillator 8-48MHz (XOSC1)
+      $input: 120000000
+      $input_id: Digital Phase Locked Loop (DPLL0)
+      RESERVED_InputFreq: 120000000
+      RESERVED_InputFreq_id: Digital Phase Locked Loop (DPLL0)
       _$freq_output_Generic clock generator 0: 120000000
       _$freq_output_Generic clock generator 1: 20000000
       _$freq_output_Generic clock generator 10: 12000000
       _$freq_output_Generic clock generator 11: 12000000
       _$freq_output_Generic clock generator 2: 400000
-      _$freq_output_Generic clock generator 3: 100000
+      _$freq_output_Generic clock generator 3: 1000000
       _$freq_output_Generic clock generator 4: 100000
       _$freq_output_Generic clock generator 5: 12000000
       _$freq_output_Generic clock generator 6: 12000000
@@ -871,7 +871,7 @@ drivers:
       gclk_gen_2_oscillator: External Crystal Oscillator 8-48MHz (XOSC0)
       gclk_gen_3_div: 120
       gclk_gen_3_div_sel: false
-      gclk_gen_3_oscillator: External Crystal Oscillator 8-48MHz (XOSC0)
+      gclk_gen_3_oscillator: Digital Phase Locked Loop (DPLL0)
       gclk_gen_4_div: 120
       gclk_gen_4_div_sel: false
       gclk_gen_4_oscillator: External Crystal Oscillator 8-48MHz (XOSC0)
@@ -961,10 +961,10 @@ drivers:
     functionality: System
     api: HAL:HPL:OSCCTRL
     configuration:
-      $input: 20000000
-      $input_id: Generic clock generator 1
-      RESERVED_InputFreq: 20000000
-      RESERVED_InputFreq_id: Generic clock generator 1
+      $input: 1000000
+      $input_id: Generic clock generator 3
+      RESERVED_InputFreq: 1000000
+      RESERVED_InputFreq_id: Generic clock generator 3
       _$freq_output_Digital Frequency Locked Loop (DFLL48M): 48000000
       _$freq_output_Digital Phase Locked Loop (DPLL0): 120000000
       _$freq_output_Digital Phase Locked Loop (DPLL1): 40000000

@@ -351,8 +351,8 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			case ROBOT_ACCELMAGTOUCH_GET_ACCELEROMETER_VALUES:
 				//copy sender IP to Accel structure
 				printf("Get accel values");
-				APStatus.pcb=pcb;  //save pcb
-				APStatus.addr=addr;  //save addr
+				memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+				memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 				memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
 				memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask
 				
@@ -367,14 +367,55 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 					} //for i
 				} else {
 					ConfigureAccelerometers(AccelMask,ACCEL_STATUS_ENABLED|ACCEL_STATUS_SINGLE_SAMPLE|ACCEL_STATUS_POLLING,0);
-					APStatus.flags|=ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will call GetSample
+					//APStatus.flags|=ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will call GetSample
 				}
 				//start Accel/Touch timer if not started already
-				if (!_timer_is_started(&TIMER_1.device)) {
-					timer_start(&TIMER_1);
-				}
-				//Get_Accelerometer_Samples();
+				//if (!_timer_is_started(&TIMER_1.device)) {
+				//	timer_start(&TIMER_1);
+				//}
+				Get_Accelerometer_Samples();
 
+			break;
+			case ROBOT_ACCELMAGTOUCH_START_POLLING_ACCELEROMETER:
+			//copy sender IP to Accel structure
+			printf("Get accel values");
+			memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+			memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
+			memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
+			memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask
+			
+			//printf("AccelMask=%d\r\n",AccelMask);
+			//ACCEL_STATUS_POLLING needs to be set currently because the sample is retrieved by the timer ISR
+			if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_INTERRUPT) {
+				for(i=0;i<NumAccelerometers;i++) {
+					if (Accel[i].flags&ACCEL_STATUS_INTERRUPT) {
+						//trigger a sample send in the next timer interrupt callback
+						Accel[i].flags|=ACCEL_STATUS_CLEAR_INTERRUPT;
+					}
+				} //for i
+			} else {
+				ConfigureAccelerometers(AccelMask,ACCEL_STATUS_ENABLED|ACCEL_STATUS_POLLING,0);
+				APStatus.flags|=ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will call GetSample
+			}
+			//start Accel/Touch timer if not started already
+			if (!_timer_is_started(&TIMER_1.device)) {
+				timer_start(&TIMER_1);
+			}
+			//Get_Accelerometer_Samples();
+
+			break;
+			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_ACCELEROMETER:
+				printf("Stop polling accelerometers");
+				APStatus.flags&=~ACCEL_PCB_STATUS_ACCEL_POLLING;
+				memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
+				memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
+				memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
+				memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask
+				ConfigureAccelerometers(AccelMask,0,0); //disable accelerometers
+				APStatus.flags&=~ACCEL_PCB_STATUS_ACCEL_POLLING; //so timer will stop calling GetSample
+				if (!(APStatus.flags&ACCEL_PCB_STATUS_ACCEL_POLLING) && !(ASPStatus.flags&ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING)) {
+					timer_stop(&TIMER_1);
+				}
 			break;
 			case ROBOT_ACCELMAGTOUCH_GET_ANALOG_SENSOR_VALUES:
 				//ip[0-3] robot_inst[4] touch sensor mask[5-8]
