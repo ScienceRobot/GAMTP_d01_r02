@@ -194,7 +194,7 @@ uint8_t SendAnalogSensorUDPPacket(void) {
     if (NumActiveAnalogSensors>0) {
 
 		//determine return buffer size
-		bufcount=NumActiveAnalogSensors*4;  //8-bit %press, 8-bit % change, 16-bit samples
+		bufcount=NumActiveAnalogSensors*5;  //8-bit sensor num, 8-bit %press, 8-bit % change, 16-bit samples
 	
 		retbuf = pbuf_alloc(PBUF_TRANSPORT, 5+bufcount, PBUF_RAM);
 		ReturnInst=retbuf->payload;
@@ -225,7 +225,8 @@ uint8_t SendAnalogSensorUDPPacket(void) {
 			if (PercentChange<-1.0) {
 				PercentChange=-1.0;
 			}
-		
+
+			ReturnInst[bufcount++]=(uint8_t)ActiveSensor;		
 			ReturnInst[bufcount++]=(uint8_t)(PercentPress*0xff);
 			ReturnInst[bufcount++]=(uint8_t)(PercentChange*0xff);				
 			memcpy(&ReturnInst[bufcount],(uint16_t *)&Sample,2);

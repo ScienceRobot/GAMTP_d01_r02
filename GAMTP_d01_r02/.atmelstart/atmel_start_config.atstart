@@ -1292,7 +1292,7 @@ drivers:
       tc_arch_tcinv: false
       timer_advanced_configuration: false
       timer_event_control: false
-      timer_prescaler: Divide by 16
+      timer_prescaler: No division
       timer_tick: 10000
     optional_signals: []
     variant: null
@@ -1300,11 +1300,11 @@ drivers:
       domain_group:
         nodes:
         - name: TC
-          input: Generic clock generator 0
+          input: Generic clock generator 3
           external: false
           external_frequency: 0
         configuration:
-          tc_gclk_selection: Generic clock generator 0
+          tc_gclk_selection: Generic clock generator 3
   ETHERNET_MAC_0:
     user_label: ETHERNET_MAC_0
     definition: Atmel:SAME53_Drivers:0.0.1::SAME53N20A-AF::GMAC::driver_config_definition::GMAC::HAL:Driver:GMAC.Async

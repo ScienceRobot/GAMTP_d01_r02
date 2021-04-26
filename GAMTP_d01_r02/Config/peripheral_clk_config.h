@@ -401,7 +401,7 @@
 
 // <i> Select the clock source for TC.
 #ifndef CONF_GCLK_TC2_SRC
-#define CONF_GCLK_TC2_SRC GCLK_PCHCTRL_GEN_GCLK0_Val
+#define CONF_GCLK_TC2_SRC GCLK_PCHCTRL_GEN_GCLK3_Val
 #endif
 
 /**
@@ -409,7 +409,7 @@
  * \brief TC2's Clock frequency
  */
 #ifndef CONF_GCLK_TC2_FREQUENCY
-#define CONF_GCLK_TC2_FREQUENCY 120000000
+#define CONF_GCLK_TC2_FREQUENCY 100000
 #endif
 
 // <<< end of configuration section >>>

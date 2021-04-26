@@ -602,7 +602,7 @@ uint8_t SendTimerUDPPacket(void) {
 	bufcount=0;
 	for(i=0;i<NumAccelerometers;i++) {
 		if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
-			bufcount+=3;
+			bufcount+=15;  //1 byte AccelNum (1), 2 bytes*3=accel (6), 2 bytes temperature (2), 2*3=gyro (6)  
 		} //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
 	} //for i	
 	
@@ -614,9 +614,9 @@ uint8_t SendTimerUDPPacket(void) {
 	bufcount=0;
     for(i=0;i<NumAccelerometers;i++) {
 	    if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
-			ReturnInst[5+bufcount++]=Accel[i].Buffer[0];				
-			ReturnInst[5+bufcount++]=Accel[i].Buffer[1];
-			ReturnInst[5+bufcount++]=Accel[i].Buffer[2];
+			ReturnInst[5+bufcount]=i; //accel num
+			memcpy(&ReturnInst[6+bufcount],Accel[i].Buffer,14); //accel(16-bit*3)+temp(16-bit*1)+gyro(16-bit*3)
+			bufcount+=15;
 		} //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
 	} //for i
 	

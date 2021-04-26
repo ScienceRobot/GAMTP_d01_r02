@@ -195,7 +195,7 @@
 // <i> This defines the prescaler value
 // <id> timer_prescaler
 #ifndef CONF_TC2_PRESCALER
-#define CONF_TC2_PRESCALER 0x4
+#define CONF_TC2_PRESCALER 0x0
 #endif
 
 // <o> Length of one timer tick in uS <0-4294967295>
