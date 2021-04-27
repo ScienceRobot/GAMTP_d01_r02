@@ -319,6 +319,17 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
         return(0);
     }
 */
+
+	//check WHO_AM_I
+	I2CData[0] = MPU6050_WHO_AM_I;
+
+	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
+	io_write(&(I2C_0.io), I2CData, 1);
+	I2CData[0]=0;
+	io_read(&(I2C_0.io), I2CData, 1);
+	//i2c address: should be 0x68
+	printf("WHO_AM_I: 0x%x\r\n",I2CData[0]);
+	
 	
 	return(1);
 

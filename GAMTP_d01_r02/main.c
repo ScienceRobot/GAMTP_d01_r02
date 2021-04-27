@@ -350,7 +350,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			//**************
 			case ROBOT_ACCELMAGTOUCH_GET_ACCELEROMETER_VALUES:
 				//copy sender IP to Accel structure
-				printf("Get accel values");
+				printf("Get accel values\r\n");
 				memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 				memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 				memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
@@ -378,7 +378,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			break;
 			case ROBOT_ACCELMAGTOUCH_START_POLLING_ACCELEROMETER:
 			//copy sender IP to Accel structure
-			printf("Get accel values");
+			printf("Get accel values\r\n");
 			memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 			memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 			memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
@@ -405,7 +405,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 
 			break;
 			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_ACCELEROMETER:
-				printf("Stop polling accelerometers");
+				printf("Stop polling accelerometers\r\n");
 				APStatus.flags&=~ACCEL_PCB_STATUS_ACCEL_POLLING;
 				memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 				memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
@@ -449,7 +449,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 				//}
 			break;
 			case ROBOT_ACCELMAGTOUCH_START_POLLING_ANALOG_SENSORS:
-				printf("Start polling analog sensors");
+				printf("Start polling analog sensors\r\n");
 
 				ASPStatus.flags|=ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING;
 				memcpy(&ASPStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
@@ -470,7 +470,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 
 			break;
 			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_ANALOG_SENSORS:
-				printf("Stop polling analog sensors");
+				printf("Stop polling analog sensors\r\n");
 				ASPStatus.flags&=~ACCEL_PCB_STATUS_ANALOG_SENSOR_POLLING;
 				memcpy(&ASPStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 				memcpy(&ASPStatus.addr,addr,sizeof(struct ip_addr));  //save addr
@@ -486,51 +486,6 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 				}
 			break;
 
-#if 0 
-			case ROBOT_ACCELMAGTOUCH_START_POLLING_TOUCH_SENSORS:
-		//        EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_INTERRUPT; //set stop polling flag
-				memcpy(TouchSensorSend,InstData,5); //copy IP + inst byte to return instruction
-				EAStatus.flags|=ETHACCEL_STATUS_TOUCH_SENSOR_POLLING;
-				//set which sensors to poll
-				if (InstDataLen>=9) {
-					memcpy(&TouchSensorMask,(uint32_t *)&InstData[5],4);
-					SetActiveTouchSensors(TouchSensorMask,1); //1=activate
-				}
-				//enable the timer that starts the ADC (and also polls accels)
-				T2CONbits.ON=1; //enable timer2+3 (for 32-bit)
-				//there is no need to enable the interrupt, because it is always enabled
-				//but just to make sure
-				IEC0bits.T3IE=1;        //enable Timer 2+3 interrupt- doesn't enable the timer
-			break;
-			case ROBOT_ACCELMAGTOUCH_STOP_POLLING_TOUCH_SENSORS:
-        
-				EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_POLLING; //set stop polling flag
-        
-				//todo: this will get a 32-bit mask to determine which touch sensors
-				//to stop polling
-				if (InstDataLen>=9) {
-					memcpy(&TouchSensorMask,(uint32_t *)&InstData[5],4);
-					SetActiveTouchSensors(TouchSensorMask,0); //0=deactivate
-				} else {
-					//deactivate all
-					SetActiveTouchSensors(0xffffffff,0); //0=deactivate
-				}
-
-
-				//EAStatus.flags&=~ETHACCEL_STATUS_TOUCH_SENSOR_POLLING; //set stop polling flag
-				//pic32mx IEC1bits.AD1IE=0; //disable AD1 interrupt
-				//pic32mx IFS1bits.AD1IF=0; //clear interrupt flag
-				IEC6bits.ADCEOSIE=0; //disable end of scan interrupt
-				IFS6bits.ADCEOSIF=0; //clear end of scan interrupt flag
-				if (!(EAStatus.flags&ETHACCEL_STATUS_ACCEL_POLLING) &&
-					!(EAStatus.flags&ETHACCEL_STATUS_ACCEL_INTERRUPT) &&
-					!(EAStatus.flags&ETHACCEL_STATUS_TOUCH_SENSOR_INTERRUPT)) {
-					//only stop timer if no touch sensor polling or interrupt is enabled
-					T2CONbits.ON=0; //disable timer2+3 (for 32-bit)
-				} //
-
-			break;
-#endif			
 			
 			} //switch
 

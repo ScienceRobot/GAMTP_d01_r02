@@ -32,6 +32,7 @@ extern "C" {
 #define MPU6050_FIFO_EN_ZG_FIFO_EN 0x10
 #define MPU6050_FIFO_EN_ACCEL_FIFO_EN 0x08    
 #define MPU6050_INT_PIN_CFG 0x37
+#define MPU6050_WHO_AM_I 0x75
 #define MPU6050_INT_PIN_CFG_INT_LEVEL 0x80  //int pin is active low if set
 #define MPU6050_INT_PIN_CFG_LATCH_INT_EN 0x20  //0=50us pulse, 1=set until cleared
 #define MPU6050_INT_PIN_CFG_INT_RD_CLEAR 0x10  //0=must read INT_STATUS reg, 1=int is cleared on any read
