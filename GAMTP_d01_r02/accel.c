@@ -5,10 +5,12 @@
 //#include "app.h" //for delay_ms, ReadCoreTimer
 #include "MPU6050.h"
 #include <stdio.h>  //for printf
+#include <string.h>
 #include <hal_gpio.h>
 #include <hal_delay.h>
 #include <hal_timer.h>
 #include <hal_i2c_m_sync.h>
+#include <atmel_start_pins.h>
 #include "robot_accelmagtouchgps_mcu_instructions.h"
 #include <lwip/udp.h>
 #include "main.h"
@@ -646,6 +648,10 @@ uint8_t SendTimerUDPPacket(void) {
 uint8_t InitializeAccels(void) {
 
 	int i;
+	
+	//make sure TCA9548APWR ^I2C Reset is high
+	gpio_set_pin_level(PA21,true);
+
 	
 	NumAccelerometers=8; //there can be up to 8 accelerometers on a GAMTP
 	
