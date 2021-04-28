@@ -157,7 +157,7 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 	addr=1<<AccelNum;  //select only the accel i2c channel
 	io_write(&(I2C_0.io), &addr, 1);
 	//io_read(&(I2C_0.io), mac, 6);
-
+	delay_ms(5);
 
     //followed by a software reset    
 #if USE_MPU6050
@@ -175,7 +175,7 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 //                                                        NULL);
 
 
-    delay_ms(1); //definitely needed for I2C driver to start the 
+    //delay_ms(5); //definitely needed for I2C driver to start the 
     //transaction if no while after it because otherwise the i2c queue 
     //fills up. Need for waiting too- because complete may be returned before
     //inst is queued apparently.
@@ -520,6 +520,17 @@ uint8_t Get_Accelerometer_Samples(void) {
     uint8_t DonePolling;
     //printf("S\n\r");
   	uint8_t addr;  
+
+
+	//check WHO_AM_I
+	RegAddr = MPU6050_WHO_AM_I;
+
+	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
+	io_write(&(I2C_0.io), &RegAddr, 1);
+	RegAddr=0;
+	io_read(&(I2C_0.io), &RegAddr, 1);
+	//byte returned: i2c address: should be 0x68
+	printf("WHO_AM_I: 0x%x\r\n",RegAddr);
 	  
 	  
 	  
@@ -648,18 +659,14 @@ uint8_t SendTimerUDPPacket(void) {
 uint8_t InitializeAccels(void) {
 
 	int i;
-	
-	//make sure TCA9548APWR ^I2C Reset is high
-	gpio_set_pin_level(PA21,true);
 
-	
-	NumAccelerometers=8; //there can be up to 8 accelerometers on a GAMTP
-	
 	//set TC9548A ~reset~ pin = 1
 	gpio_set_pin_direction(GPIO(GPIO_PORTA, 21),GPIO_DIRECTION_OUT);
 	gpio_set_pin_level(GPIO(GPIO_PORTA, 21),true);
-	
-	
+	delay_ms(1); //wait for pin level to reach 1
+
+	NumAccelerometers=8; //there can be up to 8 accelerometers on a GAMTP
+		
 	for(i=0;i<NumAccelerometers;i++) {	 
 		Accel[i].flags&=~ACCEL_STATUS_ENABLED;
 	}

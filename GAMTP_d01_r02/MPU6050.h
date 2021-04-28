@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#define MPU6050_ADDRESS    0xd0//0x68
+#define MPU6050_ADDRESS    0x68
 
     //default full scale range for gyro is +-250 degrees/second, 
     //and for accel is +-2.0g
