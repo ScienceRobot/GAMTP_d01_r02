@@ -212,9 +212,10 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 
 uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 {
-    uint8_t I2CData[10],result,ReturnByte,addr;
+    uint8_t I2CData[10],addr;
     //uint8_t ReturnValue;
     //uint32_t Timeout;
+	int32_t result;
 
     //start accelerometer
 
@@ -232,8 +233,8 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	//set TCA9548A mask to this accel
 	i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
 	addr=1<<AccelNum;  //select only the accel i2c channel
-	io_write(&(I2C_0.io), &addr, 1);
-
+	result=io_write(&(I2C_0.io), &addr, 1);
+	//printf("bytes written=%d\r\n",result);
     
 #if USE_MPU6050
 
@@ -243,8 +244,8 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
     I2CData[1] = MPU6050_CONFIG_DLPF_CFG_1;
 
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
-	io_write(&(I2C_0.io), I2CData, 2);
-
+	result=io_write(&(I2C_0.io), I2CData, 2);
+	printf("bytes written=%d\r\n",result);
 
 //    Accel[AccelNum].I2CBufferHandle=DRV_I2C_Transmit(Accel[AccelNum].handleI2C,
 //                                                        Accel[AccelNum].I2CAddress,
@@ -514,7 +515,7 @@ return(1);
 //flag can = ACCEL_STATUS_POLLING or ACCEL_STATUS_SINGLE_SAMPLE
 //uint8_t Get_Accelerometer_Samples(uint32_t flag) {
 uint8_t Get_Accelerometer_Samples(void) {
-    uint8_t i,RegAddr;
+    uint8_t i,RegAddr,RegData;
     uint8_t ReturnValue,result;
     //uint32_t TempSendLen;
     uint8_t DonePolling;
@@ -523,14 +524,14 @@ uint8_t Get_Accelerometer_Samples(void) {
 
 
 	//check WHO_AM_I
+	addr=MPU6050_ADDRESS;
 	RegAddr = MPU6050_WHO_AM_I;
 
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
 	io_write(&(I2C_0.io), &RegAddr, 1);
-	RegAddr=0;
-	io_read(&(I2C_0.io), &RegAddr, 1);
+	io_read(&(I2C_0.io), &RegData, 1);
 	//byte returned: i2c address: should be 0x68
-	printf("WHO_AM_I: 0x%x\r\n",RegAddr);
+	printf("WHO_AM_I: 0x%x\r\n",RegData);
 	  
 	  
 	  
