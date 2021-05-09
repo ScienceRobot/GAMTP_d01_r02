@@ -366,6 +366,7 @@ uint8_t ConfigureAccelerometers(uint16_t mask,uint32_t flags,uint16_t Threshold)
                 if (!(Accel[i].flags&ACCEL_STATUS_ENABLED)) { //Accel not already enabled
                     //power on and initialize accel
                     //Power_On_Accelerometer(i);
+					Reset_Accelerometer(i);
                     if (!Initialize_Accelerometer(i)) {
                         //could not initialize accelerometer
                         //so disable it
