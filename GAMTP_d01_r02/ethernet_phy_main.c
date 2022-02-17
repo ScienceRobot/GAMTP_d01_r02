@@ -44,8 +44,13 @@ void ethernet_phys_init(void)
 {
 	//set PHY reset high
 	gpio_set_pin_direction(PHY_RESET_PIN,GPIO_DIRECTION_OUT);
-	gpio_set_pin_level(PHY_RESET_PIN,true);
+
+	gpio_set_pin_level(PHY_RESET_PIN,false);
 	//delay for 100us
+    delay_ms(100);
+	gpio_set_pin_level(PHY_RESET_PIN,true);
+	//delay for 100us?
+	delay_ms(10);
 	//set PHY YELLOW LED low
 //not needed to use as regular gpio?	gpio_set_pin_function(PA14, PINMUX_PA18L_GMAC_GTX0);
 
