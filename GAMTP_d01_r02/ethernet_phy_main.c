@@ -45,12 +45,13 @@ void ethernet_phys_init(void)
 	//set PHY reset high
 	gpio_set_pin_direction(PHY_RESET_PIN,GPIO_DIRECTION_OUT);
 
-	gpio_set_pin_level(PHY_RESET_PIN,false);
+	//commenting out for now because remember caused problem with non-linear code doing initialization that is then erased when the phy is reset
+	//tph gpio_set_pin_level(PHY_RESET_PIN,false);
 	//delay for 100us
-    delay_ms(100);
+    //tph delay_ms(100);
 	gpio_set_pin_level(PHY_RESET_PIN,true);
 	//delay for 100us?
-	delay_ms(10);
+	//delay_ms(10);
 	//set PHY YELLOW LED low
 //not needed to use as regular gpio?	gpio_set_pin_function(PA14, PINMUX_PA18L_GMAC_GTX0);
 

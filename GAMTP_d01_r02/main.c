@@ -639,7 +639,7 @@ int main(void)
 	//while (usart_async_get_status(&USART_0, &iostat)==ERR_BUSY);
 	//sprintf((char *)OutStr,"\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n");
 	//io_write(io,OutStr,strlen(OutStr));
-	sprintf((char *)OutStr,"GAMTP_rev03\n");
+	sprintf((char *)OutStr,"GAMTP_rev05\n");
 	io_write(io,OutStr,strlen(OutStr));
 	//while (usart_async_get_status(&USART_0, &iostat)==ERR_BUSY);
 
