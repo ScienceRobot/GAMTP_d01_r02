@@ -523,7 +523,7 @@ int CheckWired(void) {
 	//Set callback function for link status change
 	netif_set_link_callback(&LWIP_MACIF_desc, link_callback);
 		
-	mac_async_enable(&ETHERNET_MAC_0);  //already done in ETHERNET_PHY_0_init
+//tph need to do again?	mac_async_enable(&ETHERNET_MAC_0);  //already done in ETHERNET_PHY_0_init
 //	mac_async_enable_irq(&ETHERNET_MAC_0);
 	//mac_async_write(&ETHERNET_MAC_0, (uint8_t *)"Hello World!", 12);
 
@@ -654,7 +654,7 @@ int main(void)
 
 
 
-	printf("\r\nHello ATMEL World!\r\n");
+	printf("Hello ATMEL World!\n");
 	//fflush(stdio_io);
 
 	//below does not work for printf because printf calls _puts_r which must send one char at a time 
@@ -735,6 +735,7 @@ int main(void)
 	USART_1_input();  //check for usart1 input
 
 	//delay_ms(100);
+	
 	
 	
 
