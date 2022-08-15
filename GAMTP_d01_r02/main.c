@@ -525,7 +525,7 @@ int CheckWired(void) {
 		
 //tph need to do again?	mac_async_enable(&ETHERNET_MAC_0);  //already done in ETHERNET_PHY_0_init
 //	mac_async_enable_irq(&ETHERNET_MAC_0);
-	//mac_async_write(&ETHERNET_MAC_0, (uint8_t *)"Hello World!", 12);
+//	mac_async_write(&ETHERNET_MAC_0, (uint8_t *)"Hello World!", 12);
 
 	udpserver_pcb = udp_new();  //create udp server
 	//udp_bind(udpserver_pcb, &LWIP_MACIF_desc.ip_addr.addr, UDP_PORT);   //port UDP_PORT 
@@ -604,6 +604,7 @@ int main(void)
 
 	/* Initializes MCU, drivers and middleware - tph - inits phy and uarts*/
 	atmel_start_init();
+	systick_enable();
 
 	//initialize user gpio pins	
 	//gpio_set_pin_level(LED0,true);
@@ -620,7 +621,6 @@ int main(void)
 	/* Read MacAddress from EEPROM */  //tph: currently just adding a valid public MAC address
 	read_macaddress(mac);
 
-	systick_enable();
 
 	//MACIF_example();
 	

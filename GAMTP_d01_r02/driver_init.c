@@ -272,6 +272,7 @@ void ETHERNET_MAC_0_init(void)
 	ETHERNET_MAC_0_CLOCK_init();
 	mac_async_init(&ETHERNET_MAC_0, GMAC);
 	ETHERNET_MAC_0_PORT_init();
+	mac_async_enable(&ETHERNET_MAC_0);  //tph
 }
 
 void ETHERNET_MAC_0_example(void)
