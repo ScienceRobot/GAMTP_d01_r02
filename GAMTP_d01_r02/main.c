@@ -604,7 +604,7 @@ int main(void)
 
 	/* Initializes MCU, drivers and middleware - tph - inits phy and uarts*/
 	atmel_start_init();
-	systick_enable();
+	systick_enable(); 
 
 	//initialize user gpio pins	
 	//gpio_set_pin_level(LED0,true);
@@ -620,7 +620,6 @@ int main(void)
 
 	/* Read MacAddress from EEPROM */  //tph: currently just adding a valid public MAC address
 	read_macaddress(mac);
-
 
 	//MACIF_example();
 	
@@ -651,8 +650,6 @@ int main(void)
 
 	//sprintf((char *)OutStr,"\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\n");
 	//io_write(io,OutStr,strlen(OutStr));
-
-
 
 	printf("Hello ATMEL World!\n");
 	//fflush(stdio_io);

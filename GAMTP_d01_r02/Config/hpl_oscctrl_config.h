@@ -94,7 +94,7 @@
 // <i> Indicates whether the connections between the I/O pads and the external clock or crystal oscillator is enabled or not
 // <id> xosc0_arch_xtalen
 #ifndef CONF_XOSC0_XTALEN
-#define CONF_XOSC0_XTALEN 1//tph 0
+#define CONF_XOSC0_XTALEN 0//causes DHCP to not work if 1//tph 0
 #endif
 //</h>
 //</e>
