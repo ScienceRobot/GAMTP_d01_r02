@@ -590,7 +590,7 @@ uint8_t Get_Accelerometer_Samples(void) {
 				i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);				
 				io_write(&(I2C_0.io), &RegAddr, 1);
 				io_read(&(I2C_0.io), Accel[i].Buffer, 14);
-				printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
+				//printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
 	
 /*                Accel[i].I2CBufferHandle=DRV_I2C_TransmitThenReceive(Accel[i].handleI2C, 
                                                         Accel[i].I2CAddress,
