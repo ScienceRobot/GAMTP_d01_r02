@@ -157,7 +157,7 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 	addr=1<<AccelNum;  //select only the accel i2c channel
 	io_write(&(I2C_0.io), &addr, 1);
 	//io_read(&(I2C_0.io), mac, 6);
-	delay_ms(5);
+	delay_ms(50);  //was 5ms
 
     //followed by a software reset    
 #if USE_MPU6050
@@ -245,7 +245,7 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
 	result=io_write(&(I2C_0.io), I2CData, 2);
-	printf("bytes written=%d\r\n",result);
+	//printf("bytes written=%d\r\n",result);
 
 //    Accel[AccelNum].I2CBufferHandle=DRV_I2C_Transmit(Accel[AccelNum].handleI2C,
 //                                                        Accel[AccelNum].I2CAddress,
@@ -331,7 +331,7 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	I2CData[0]=0;
 	io_read(&(I2C_0.io), I2CData, 1);
 	//i2c address: should be 0x68
-	printf("WHO_AM_I: 0x%x\r\n",I2CData[0]);
+	printf("WHO_AM_I: 0x%x (0x68)\r\n",I2CData[0]);
 	
 	
 	return(1);
@@ -523,7 +523,9 @@ uint8_t Get_Accelerometer_Samples(void) {
     //printf("S\n\r");
   	uint8_t addr;  
 
+#if 0 
 
+//this causes sample read to fail
 	//check WHO_AM_I
 	addr=MPU6050_ADDRESS;
 	RegAddr = MPU6050_WHO_AM_I;
@@ -532,8 +534,8 @@ uint8_t Get_Accelerometer_Samples(void) {
 	io_write(&(I2C_0.io), &RegAddr, 1);
 	io_read(&(I2C_0.io), &RegData, 1);
 	//byte returned: i2c address: should be 0x68
-	printf("WHO_AM_I: 0x%x\r\n",RegData);
-	  
+	printf("WHO_AM_I: 0x%x (0x68)\r\n",RegData);
+#endif 	  
 	  
 	  
 //#if 0 
