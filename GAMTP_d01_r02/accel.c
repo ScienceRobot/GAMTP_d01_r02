@@ -233,6 +233,7 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	//set TCA9548A mask to this accel
 	i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
 	addr=1<<AccelNum;  //select only the accel i2c channel
+	printf("set I2C addr to %d\n",addr);
 	result=io_write(&(I2C_0.io), &addr, 1);
 	//printf("bytes written=%d\r\n",result);
     
@@ -331,7 +332,7 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	I2CData[0]=0;
 	io_read(&(I2C_0.io), I2CData, 1);
 	//i2c address: should be 0x68
-	printf("WHO_AM_I: 0x%x (0x68)\r\n",I2CData[0]);
+	printf("Accel %d WHO_AM_I: 0x%x (0x68)\n",AccelNum, I2CData[0]);
 	
 	
 	return(1);
@@ -448,11 +449,8 @@ uint8_t ConfigureAccelerometers(uint16_t mask,uint32_t flags,uint16_t Threshold)
                 //tph Power_Off_Accelerometer(i); 
             } //if (flags&ACCEL_STATUS_ENABLED) { //enable these accels
         } else { //if (mask&(1<<i)) {
-            //no mask, these sensors stay in the same state
-            if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
-             //   ActiveAccel[NumEnabledAccelerometers]=i;
-                NumEnabledAccelerometers++;
-            }
+            //sensor not in mask, disable these sensors
+			Accel[i].flags&=~ACCEL_STATUS_ENABLED;
         } //if (mask&(1<<i)) {
 
         if (Accel[i].flags&ACCEL_STATUS_ENABLED) {

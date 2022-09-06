@@ -289,7 +289,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 	//dst_ip = &(pcb->remote_ip); // this is zero always
 	if (p != NULL) {
 		//printf("UDP rcv %d bytes: ", (*p).len);
-		printf("%d ", (*p).len);
+		//printf("%d ", (*p).len);
 		//    	  for (i = 0; i < (*p).len; ++i)
 		//			printf("%c",((char*)(*p).payload)[i]);
 		//    	printf("\n");
@@ -350,13 +350,13 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			//**************
 			case ROBOT_ACCELMAGTOUCH_GET_ACCELEROMETER_VALUES:
 				//copy sender IP to Accel structure
-				printf("Get accel values\r\n");
+				printf("Inst: Get accel values\r\n");
 				memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 				memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 				memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
 				memcpy(&AccelMask,(uint16_t *)&InstData[5],2);  //copy 16-bit mask
 				
-				//printf("AccelMask=%d\r\n",AccelMask);
+//				printf("AccelMask=%d\r\n",AccelMask);
 				//ACCEL_STATUS_POLLING needs to be set currently because the sample is retrieved by the timer ISR
 				if (APStatus.flags&ACCEL_PCB_STATUS_ACCEL_INTERRUPT) {
 					for(i=0;i<NumAccelerometers;i++) {
@@ -378,7 +378,7 @@ void udpserver_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_ad
 			break;
 			case ROBOT_ACCELMAGTOUCH_START_POLLING_ACCELEROMETER:
 			//copy sender IP to Accel structure
-			printf("Get accel values\r\n");
+			printf("Poll accel values\r\n");
 			memcpy(&APStatus.pcb,pcb,sizeof(struct udp_pcb));  //save pcb
 			memcpy(&APStatus.addr,addr,sizeof(struct ip_addr));  //save addr
 			memcpy(APStatus.ReturnIP,InstData,5); //copy IP + inst byte to return instruction
