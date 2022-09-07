@@ -44,7 +44,7 @@ extern "C" {
      //takes the sensor out of sleep mode and in to regular operation mode.
     //CLKSEL 0=8MHz, 3=PLL w Z axis gyroscope reference
 #define MPU6050_FIFO_R_W 0x74  //FIFO Read/Write
-#define MPU6050_PWR_MGMT_1_DEVICE_RESET 0x80  //sets DEVICE_RESET bit
+#define MPU6050_PWR_MGMT_1_DEVICE_RESET 0x80  //sets DEVICE_RESET bit: The bit automatically clears to 0 once the reset is done
 
     
     

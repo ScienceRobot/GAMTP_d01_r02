@@ -41,8 +41,8 @@ static struct timer_task AccelTimerTask;
 
 
 extern AccelPCBStatus APStatus; 
-extern uint8_t NumAccelerometers;
-extern AccelStatus Accel[MAX_NUM_ACCEL];
+//extern uint8_t NumAccelerometers;
+//extern AccelStatus Accel[MAX_NUM_ACCEL];
 extern struct timer_descriptor       TIMER_0;  
 extern struct timer_descriptor       TIMER_1;
 extern struct i2c_m_sync_desc        I2C_0;
@@ -157,12 +157,12 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 	addr=1<<AccelNum;  //select only the accel i2c channel
 	io_write(&(I2C_0.io), &addr, 1);
 	//io_read(&(I2C_0.io), mac, 6);
-	delay_ms(50);  //was 5ms
+	delay_ms(5);  //was 5ms
 
     //followed by a software reset    
 #if USE_MPU6050
     I2CData[0] = MPU6050_PWR_MGMT_1; //CNTL_REG2
-    I2CData[1] = MPU6050_PWR_MGMT_1_DEVICE_RESET;  //Reset    
+    I2CData[1] = MPU6050_PWR_MGMT_1_DEVICE_RESET;  //Reset  0x80 The bit automatically clears to 0 once the reset is done  
 #endif //USE_MPU6050
 
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
@@ -304,6 +304,9 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
 	io_write(&(I2C_0.io), I2CData, 2);
 
+	delay_ms(100);  //wait for PLL
+
+
 	/*
     Accel[AccelNum].I2CBufferHandle=DRV_I2C_Transmit(Accel[AccelNum].handleI2C,
                                                         Accel[AccelNum].I2CAddress,
@@ -334,6 +337,8 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 	//i2c address: should be 0x68
 	printf("Accel %d WHO_AM_I: 0x%x (0x68)\n",AccelNum, I2CData[0]);
 	
+	//delay_ms(100);  //wait after WHO_AM_I
+
 	
 	return(1);
 
@@ -519,30 +524,11 @@ uint8_t Get_Accelerometer_Samples(void) {
     //uint32_t TempSendLen;
     uint8_t DonePolling;
     //printf("S\n\r");
-  	uint8_t addr;  
-
-#if 0 
-
-//this causes sample read to fail
-	//check WHO_AM_I
-	addr=MPU6050_ADDRESS;
-	RegAddr = MPU6050_WHO_AM_I;
-
-	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
-	io_write(&(I2C_0.io), &RegAddr, 1);
-	io_read(&(I2C_0.io), &RegData, 1);
-	//byte returned: i2c address: should be 0x68
-	printf("WHO_AM_I: 0x%x (0x68)\r\n",RegData);
-#endif 	  
-	  
+  	uint8_t addr;  	  
 	  
 //#if 0 
     //TxSent=0;
     AccelTimerSendLen=5;
-#if USE_MPU6050
-    RegAddr= MPU6050_ACCEL_XOUT_H;  //start reg address for 14-byte bulk read
-    //RegAddr= MPU6050_FIFO_R_W; //read from the FIFO
-#endif     
     
     
     //determine which accel will be the last sample, in order for the 
@@ -584,11 +570,30 @@ uint8_t Get_Accelerometer_Samples(void) {
 				i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
 				addr=1<<i;
 				io_write(&(I2C_0.io), &addr, 1);
+
+/*
+				//causes read to fail				
+				//check WHO_AM_I
+				RegAddr = MPU6050_WHO_AM_I;
+				i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
+				io_write(&(I2C_0.io), &RegAddr, 1);
+				io_read(&(I2C_0.io), &RegData, 1);
+				//byte returned: i2c address: should be 0x68
+				printf("WHO_AM_I (Accel %d): 0x%x (0x68)\r\n",i,RegData);
+*/							
 				
 				i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);				
+#if USE_MPU6050
+				RegAddr= MPU6050_ACCEL_XOUT_H;  //start reg address for 14-byte bulk read
+				//RegAddr= MPU6050_FIFO_R_W; //read from the FIFO
+#endif     
+
 				io_write(&(I2C_0.io), &RegAddr, 1);
 				io_read(&(I2C_0.io), Accel[i].Buffer, 14);
 				//printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
+
+			    delay_ms(1);  //delay for i2c
+
 	
 /*                Accel[i].I2CBufferHandle=DRV_I2C_TransmitThenReceive(Accel[i].handleI2C, 
                                                         Accel[i].I2CAddress,
