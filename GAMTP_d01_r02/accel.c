@@ -139,6 +139,7 @@ uint8_t Power_Off_Accelerometer(uint8_t AccelNum)
 uint8_t Reset_Accelerometer(uint8_t AccelNum)
 {
     uint8_t I2CData[10],result,addr;    
+	struct _i2c_m_msg msg;
 	
 
     //this is a hardware reset- because that is the only way
@@ -157,6 +158,18 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 	addr=1<<AccelNum;  //select only the accel i2c channel
 	io_write(&(I2C_0.io), &addr, 1);
 	//io_read(&(I2C_0.io), mac, 6);
+
+    //I2CData[0] = 1<<AccelNum; 
+//	msg.addr = TCA9548A_ADDRESS;
+//	msg.len=1;
+//	msg.flags=I2C_M_STOP;
+//	msg.buffer = I2CData;
+	
+	//i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
+	//result=io_write(&(I2C_0.io), I2CData, 2);
+	//result=i2c_m_sync_transfer(&(I2C_0.io),&msg);
+
+
 	delay_ms(5);  //was 5ms
 
     //followed by a software reset    
@@ -165,8 +178,18 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
     I2CData[1] = MPU6050_PWR_MGMT_1_DEVICE_RESET;  //Reset  0x80 The bit automatically clears to 0 once the reset is done  
 #endif //USE_MPU6050
 
+	msg.addr = MPU6050_ADDRESS;
+	msg.len=2;
+	msg.flags=I2C_M_STOP;
+	msg.buffer = I2CData;
+	
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
-	io_write(&(I2C_0.io), I2CData, 2);
+	result=io_write(&(I2C_0.io), I2CData, 2);
+	//result=i2c_m_sync_transfer(&(I2C_0.io),&msg);
+
+
+//	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
+//	io_write(&(I2C_0.io), I2CData, 2);
     
 //    Accel[AccelNum].I2CBufferHandle=DRV_I2C_Transmit(Accel[AccelNum].handleI2C,
 //                                                        Accel[AccelNum].I2CAddress,
@@ -216,7 +239,7 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
     //uint8_t ReturnValue;
     //uint32_t Timeout;
 	int32_t result;
-
+	struct _i2c_m_msg msg;
     //start accelerometer
 
     //the firmware thinks there are 3 accels but some may be
@@ -244,9 +267,18 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
     I2CData[0] = MPU6050_CONFIG;
     I2CData[1] = MPU6050_CONFIG_DLPF_CFG_1;
 
+	msg.addr = MPU6050_ADDRESS;
+	msg.len=2;
+	msg.flags=I2C_M_STOP;
+	msg.buffer = I2CData;
+	
 	i2c_m_sync_set_slaveaddr(&I2C_0, MPU6050_ADDRESS, I2C_M_SEVEN);
 	result=io_write(&(I2C_0.io), I2CData, 2);
+	//result=i2c_m_sync_transfer(&(I2C_0.io),&msg);
+	//result==0 if successful
 	//printf("bytes written=%d\r\n",result);
+
+	//delay_ms(1);
 
 //    Accel[AccelNum].I2CBufferHandle=DRV_I2C_Transmit(Accel[AccelNum].handleI2C,
 //                                                        Accel[AccelNum].I2CAddress,
