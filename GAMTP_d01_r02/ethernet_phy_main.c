@@ -13,7 +13,6 @@
 
 struct ethernet_phy_descriptor ETHERNET_PHY_0_desc;
 
-
 void ETHERNET_PHY_0_init(void)
 {
 	mac_async_enable(&ETHERNET_MAC_0);

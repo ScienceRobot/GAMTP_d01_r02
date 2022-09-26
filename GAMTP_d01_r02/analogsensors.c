@@ -36,7 +36,7 @@ uint8_t Initialize_AnalogSensors(void)
     //touch sensors:
 
 	//enable ADC0 channels
-    adc_sync_enable_channel(&ADC_0, 0);
+//    adc_sync_enable_channel(&ADC_0, 0);
 	//enable ADC1 channels
     adc_sync_enable_channel(&ADC_1, 0);
 		
@@ -44,7 +44,9 @@ uint8_t Initialize_AnalogSensors(void)
     
     for(i=0;i<NumAnalogSensors;i++) {
         AnalogSensor[i].Threshold=DEFAULT_ANALOG_THRESHOLD;
-//#if 0 
+		AnalogSensor[i].ADCNum=1;
+
+#if 0 
 		switch(i) {
 			case 4:
 			case 5:
@@ -63,16 +65,7 @@ uint8_t Initialize_AnalogSensors(void)
 				printf("Unknown AnalogSensor %d\n",i);	
 		} //switch(i)
 
-//#endif		
-
-		AnalogSensor[0].ChannelNum=10;
-		AnalogSensor[1].ChannelNum=11;
-		AnalogSensor[2].ChannelNum=4;
-		AnalogSensor[3].ChannelNum=5;
-		AnalogSensor[4].ChannelNum=6;
-		AnalogSensor[5].ChannelNum=1;
-		AnalogSensor[6].ChannelNum=6;
-		AnalogSensor[7].ChannelNum=7;
+#endif		
 
         //set min and max voltage for touch sensor to calibrate itself
         //note .Max is already set to 0
@@ -92,6 +85,18 @@ uint8_t Initialize_AnalogSensors(void)
 
     } //for i
     //need SensorBitMask?
+
+	//Set each analog channel (all adc1)
+	AnalogSensor[0].ChannelNum=10;
+	AnalogSensor[1].ChannelNum=11;
+	AnalogSensor[2].ChannelNum=4;
+	AnalogSensor[3].ChannelNum=5;
+	AnalogSensor[4].ChannelNum=8;//6;
+	AnalogSensor[5].ChannelNum=9;//1;
+	AnalogSensor[6].ChannelNum=6;
+	AnalogSensor[7].ChannelNum=7;
+
+
 
     return(1);
 } //uint8_t Initialize_AnalogSensors(void)
@@ -161,6 +166,10 @@ uint8_t Get_AnalogSensor_Samples(void) {
     uint8_t i;
 
 	for (i=0;i<NumActiveAnalogSensors;i++) {
+		adc_sync_set_inputs(&ADC_1,AnalogSensor[ActiveAnalogSensor[i]].ChannelNum, 0x18, 0);
+		adc_sync_read_channel(&ADC_1, 0,&AnalogSensor[ActiveAnalogSensor[i]].Sample, 2);
+		//printf("1: %d: %x ",ActiveAnalogSensor[i],AnalogSensor[ActiveAnalogSensor[i]].Sample);
+/*
 		switch(AnalogSensor[ActiveAnalogSensor[i]].ADCNum) {
 			case 0: //ADC_0
 			    adc_sync_set_inputs(&ADC_0,AnalogSensor[ActiveAnalogSensor[i]].ChannelNum, 0x18, 0);
@@ -172,7 +181,8 @@ uint8_t Get_AnalogSensor_Samples(void) {
 			    adc_sync_read_channel(&ADC_1, 0,&AnalogSensor[ActiveAnalogSensor[i]].Sample, 2);
 				//printf("1: %d: %x ",ActiveAnalogSensor[i],AnalogSensor[ActiveAnalogSensor[i]].Sample);
 			break; 
-		}
+		} //switch
+*/
 	} //for i
 // 	printf("\n");  
 	SendAnalogSensorUDPPacket(); //send UDF packet with analog sensor data

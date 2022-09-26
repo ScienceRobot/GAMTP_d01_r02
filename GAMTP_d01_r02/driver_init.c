@@ -40,15 +40,6 @@ struct mac_async_descriptor ETHERNET_MAC_0;
 
 void ADC_0_PORT_init(void)
 {
-		// Disable digital pin circuitry
-	gpio_set_pin_direction(PA02, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(PA02, PINMUX_PA02B_ADC0_AIN0);
-
-	// Disable digital pin circuitry
-	gpio_set_pin_direction(PA03, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(PA03, PINMUX_PA03B_ADC0_AIN1);
 }
 
 void ADC_0_CLOCK_init(void)
@@ -66,6 +57,7 @@ void ADC_0_init(void)
 
 void ADC_1_PORT_init(void)
 {
+
 	// Disable digital pin circuitry
 	gpio_set_pin_direction(PC02, GPIO_DIRECTION_OFF);
 
@@ -85,6 +77,16 @@ void ADC_1_PORT_init(void)
 	gpio_set_pin_direction(PB05, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PB05, PINMUX_PB05B_ADC1_AIN7);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB06, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB06, PINMUX_PB06B_ADC1_AIN8);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB07, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB07, PINMUX_PB07B_ADC1_AIN9);
 
 	// Disable digital pin circuitry
 	gpio_set_pin_direction(PC00, GPIO_DIRECTION_OFF);
@@ -284,6 +286,34 @@ void ETHERNET_MAC_0_example(void)
 void system_init(void)
 {
 	init_mcu();
+
+	// GPIO on PA02
+
+	gpio_set_pin_level(PA02,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PA02, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PA02, GPIO_PIN_FUNCTION_OFF);
+
+	// GPIO on PA03
+
+	gpio_set_pin_level(PA03,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PA03, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PA03, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PA04
 
@@ -508,34 +538,6 @@ void system_init(void)
 	gpio_set_pin_direction(PB03, GPIO_DIRECTION_OUT);
 
 	gpio_set_pin_function(PB03, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB06
-
-	gpio_set_pin_level(PB06,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB06, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB06, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB07
-
-	gpio_set_pin_level(PB07,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB07, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB07, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PB08
 
@@ -820,6 +822,7 @@ void system_init(void)
 	gpio_set_pin_function(PC25, GPIO_PIN_FUNCTION_OFF);
 
 	ADC_0_init();
+
 	ADC_1_init();
 
 	USART_0_init();

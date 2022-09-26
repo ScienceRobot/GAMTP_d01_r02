@@ -14,14 +14,10 @@
 #include <hpl_adc_base.h>
 #include <hpl_adc_base.h>
 
-/*! The buffer size for USART */
-#define USART_1_BUFFER_SIZE 16
 
 struct usart_async_descriptor USART_1;
 struct timer_descriptor       TIMER_0;
 struct timer_descriptor       TIMER_1;
-
-static uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct adc_sync_descriptor ADC_0;
 
@@ -34,10 +30,6 @@ struct usart_async_descriptor       USART_1;
 struct timer_descriptor             TIMER_0;
 struct timer_descriptor             TIMER_1;
 
-uint8_t ADC_0_buffer[ADC_0_BUFFER_SIZE];
-uint8_t ADC_0_map[ADC_0_CH_MAX + 1];
-uint8_t ADC_1_buffer[ADC_1_BUFFER_SIZE];
-uint8_t ADC_1_map[ADC_1_CH_MAX + 1];
 uint8_t USART_1_buffer[USART_1_BUFFER_SIZE];
 
 struct usart_sync_descriptor USART_0;
@@ -46,46 +38,25 @@ struct i2c_m_sync_desc I2C_0;
 
 struct mac_async_descriptor ETHERNET_MAC_0;
 
-/**
- * \brief ADC initialization function
- *
- * Enables ADC peripheral, clocks and initializes ADC driver
- */
-void ADC_0_init(void)
+void ADC_0_PORT_init(void)
+{
+}
+
+void ADC_0_CLOCK_init(void)
 {
 	hri_mclk_set_APBDMASK_ADC0_bit(MCLK);
 	hri_gclk_write_PCHCTRL_reg(GCLK, ADC0_GCLK_ID, CONF_GCLK_ADC0_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
-	ADC_0_map[0]=0;
-	ADC_0_map[1]=1;
-	adc_async_init(&ADC_0, ADC0, ADC_0_map, ADC_0_CH_MAX, ADC_0_CH_AMOUNT, &ADC_0_ch[0], (void *)NULL);
-	
-	//adc_async_set_inputs(&ADC_0,)
-
-	adc_async_register_channel_buffer(&ADC_0, 0, ADC_0_buffer, ADC_0_BUFFER_SIZE);
-
-	// Disable digital pin circuitry
-	gpio_set_pin_direction(PA02, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(PA02, PINMUX_PA02B_ADC0_AIN0);
-
-	// Disable digital pin circuitry
-	gpio_set_pin_direction(PA03, GPIO_DIRECTION_OFF);
-
-	gpio_set_pin_function(PA03, PINMUX_PA03B_ADC0_AIN1);
 }
 
-/**
- * \brief ADC initialization function
- *
- * Enables ADC peripheral, clocks and initializes ADC driver
- */
-void ADC_1_init(void)
+void ADC_0_init(void)
 {
-	hri_mclk_set_APBDMASK_ADC1_bit(MCLK);
-	hri_gclk_write_PCHCTRL_reg(GCLK, ADC1_GCLK_ID, CONF_GCLK_ADC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
-	adc_async_init(&ADC_1, ADC1, ADC_1_map, ADC_1_CH_MAX, ADC_1_CH_AMOUNT, &ADC_1_ch[0], (void *)NULL);
-	adc_async_register_channel_buffer(&ADC_1, 0, ADC_1_buffer, ADC_1_BUFFER_SIZE);
+	ADC_0_CLOCK_init();
+	ADC_0_PORT_init();
+	adc_sync_init(&ADC_0, ADC0, (void *)NULL);
+}
 
+void ADC_1_PORT_init(void)
+{
 	// Disable digital pin circuitry
 	gpio_set_pin_direction(PC02, GPIO_DIRECTION_OFF);
 
@@ -107,6 +78,16 @@ void ADC_1_init(void)
 	gpio_set_pin_function(PB05, PINMUX_PB05B_ADC1_AIN7);
 
 	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB06, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB06, PINMUX_PB06B_ADC1_AIN8);
+
+	// Disable digital pin circuitry
+	gpio_set_pin_direction(PB07, GPIO_DIRECTION_OFF);
+
+	gpio_set_pin_function(PB07, PINMUX_PB07B_ADC1_AIN9);
+
+	// Disable digital pin circuitry
 	gpio_set_pin_direction(PC00, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PC00, PINMUX_PC00B_ADC1_AIN10);
@@ -115,6 +96,19 @@ void ADC_1_init(void)
 	gpio_set_pin_direction(PC01, GPIO_DIRECTION_OFF);
 
 	gpio_set_pin_function(PC01, PINMUX_PC01B_ADC1_AIN11);
+}
+
+void ADC_1_CLOCK_init(void)
+{
+	hri_mclk_set_APBDMASK_ADC1_bit(MCLK);
+	hri_gclk_write_PCHCTRL_reg(GCLK, ADC1_GCLK_ID, CONF_GCLK_ADC1_SRC | (1 << GCLK_PCHCTRL_CHEN_Pos));
+}
+
+void ADC_1_init(void)
+{
+	ADC_1_CLOCK_init();
+	ADC_1_PORT_init();
+	adc_sync_init(&ADC_1, ADC1, (void *)NULL);
 }
 
 void USART_0_PORT_init(void)
@@ -279,6 +273,7 @@ void ETHERNET_MAC_0_init(void)
 	ETHERNET_MAC_0_CLOCK_init();
 	mac_async_init(&ETHERNET_MAC_0, GMAC);
 	ETHERNET_MAC_0_PORT_init();
+	mac_async_enable(&ETHERNET_MAC_0);  //tph
 }
 
 void ETHERNET_MAC_0_example(void)
@@ -291,6 +286,33 @@ void system_init(void)
 {
 	init_mcu();
 
+	// GPIO on PA02
+
+	gpio_set_pin_level(PA02,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PA02, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PA02, GPIO_PIN_FUNCTION_OFF);
+
+	// GPIO on PA03
+
+	gpio_set_pin_level(PA03,
+	                   // <y> Initial level
+	                   // <id> pad_initial_level
+	                   // <false"> Low
+	                   // <true"> High
+	                   false);
+
+	// Set pin direction to output
+	gpio_set_pin_direction(PA03, GPIO_DIRECTION_OUT);
+
+	gpio_set_pin_function(PA03, GPIO_PIN_FUNCTION_OFF);
 	// GPIO on PA04
 
 	gpio_set_pin_level(PA04,
@@ -515,61 +537,6 @@ void system_init(void)
 
 	gpio_set_pin_function(PB03, GPIO_PIN_FUNCTION_OFF);
 
-	// GPIO on PB06
-
-	gpio_set_pin_level(PB06,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB06, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB06, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB07
-
-	gpio_set_pin_level(PB07,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB07, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB07, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB08
-
-	gpio_set_pin_level(PB08,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB08, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB08, GPIO_PIN_FUNCTION_OFF);
-
-	// GPIO on PB09
-
-	gpio_set_pin_level(PB09,
-	                   // <y> Initial level
-	                   // <id> pad_initial_level
-	                   // <false"> Low
-	                   // <true"> High
-	                   false);
-
-	// Set pin direction to output
-	gpio_set_pin_direction(PB09, GPIO_DIRECTION_OUT);
-
-	gpio_set_pin_function(PB09, GPIO_PIN_FUNCTION_OFF);
 
 	// GPIO on PB10
 

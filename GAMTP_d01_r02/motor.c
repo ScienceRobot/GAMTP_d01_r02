@@ -244,8 +244,10 @@ int InitializeMotors(void)
 	Motor[5].PulsePin=GPIO(GPIO_PORTA, 4);
 	Motor[6].DirPin=GPIO(GPIO_PORTB, 9);
 	Motor[6].PulsePin=GPIO(GPIO_PORTB, 8);
-	Motor[7].DirPin=GPIO(GPIO_PORTB, 7);
-	Motor[7].PulsePin=GPIO(GPIO_PORTB, 6);
+	Motor[7].DirPin=GPIO(GPIO_PORTA, 3);
+	Motor[7].PulsePin=GPIO(GPIO_PORTA, 2);
+//	Motor[7].DirPin=GPIO(GPIO_PORTB, 7);
+//	Motor[7].PulsePin=GPIO(GPIO_PORTB, 6);
 	
 	Motor[8].DirPin=GPIO(GPIO_PORTB, 3);
 	Motor[8].PulsePin=GPIO(GPIO_PORTB, 2);
