@@ -641,6 +641,7 @@ uint8_t Get_Accelerometer_Samples(void) {
 				if (Accel[i].flags&ACCEL_STATUS_SINGLE_SAMPLE) {
 					//user only wants single sample, stop polling on this accelerometer
 					Accel[i].flags&=~(ACCEL_STATUS_POLLING|ACCEL_STATUS_SINGLE_SAMPLE);	
+					printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
 				}
             } //if (Accel[i].flags&ACCEL_STATUS_POLLING) { //skip any set to interrupt
         } //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
