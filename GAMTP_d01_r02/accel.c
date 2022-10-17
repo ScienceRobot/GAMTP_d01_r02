@@ -155,7 +155,8 @@ uint8_t Reset_Accelerometer(uint8_t AccelNum)
 	//set TCA9548A mask to this accel
 	//i2c_m_sync_enable(&I2C_0);
 	i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
-	addr=1<<AccelNum;  //select only the accel i2c channel
+	addr=1<<Accel[AccelNum].TCA_Num;
+	//addr=1<<AccelNum;  //select only the accel i2c channel
 	io_write(&(I2C_0.io), &addr, 1);
 	//io_read(&(I2C_0.io), mac, 6);
 
@@ -255,8 +256,9 @@ uint8_t Initialize_Accelerometer(uint8_t AccelNum)
 
 	//set TCA9548A mask to this accel
 	i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
-	addr=1<<AccelNum;  //select only the accel i2c channel
-	printf("set I2C addr to %d\n",addr);
+	addr=1<<Accel[AccelNum].TCA_Num;
+	//addr=1<<AccelNum;  //select only the accel i2c channel
+	//printf("set I2C addr to %d\n",addr);
 	result=io_write(&(I2C_0.io), &addr, 1);
 	//printf("bytes written=%d\r\n",result);
     
@@ -600,7 +602,7 @@ uint8_t Get_Accelerometer_Samples(void) {
 				}
                 //set TCA9548A mask to this accel
 				i2c_m_sync_set_slaveaddr(&I2C_0, TCA9548A_ADDRESS, I2C_M_SEVEN);
-				addr=1<<i;
+				addr=1<<Accel[i].TCA_Num;//i;
 				io_write(&(I2C_0.io), &addr, 1);
 
 /*
@@ -641,7 +643,7 @@ uint8_t Get_Accelerometer_Samples(void) {
 				if (Accel[i].flags&ACCEL_STATUS_SINGLE_SAMPLE) {
 					//user only wants single sample, stop polling on this accelerometer
 					Accel[i].flags&=~(ACCEL_STATUS_POLLING|ACCEL_STATUS_SINGLE_SAMPLE);	
-					printf("%02x %02x %02x\n",Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
+					printf("%d %02x %02x %02x\n",i,Accel[i].Buffer[0],Accel[i].Buffer[1],Accel[i].Buffer[2]);
 				}
             } //if (Accel[i].flags&ACCEL_STATUS_POLLING) { //skip any set to interrupt
         } //if (Accel[i].flags&ACCEL_STATUS_ENABLED) {
@@ -709,7 +711,13 @@ uint8_t InitializeAccels(void) {
 		
 	for(i=0;i<NumAccelerometers;i++) {	 
 		Accel[i].flags&=~ACCEL_STATUS_ENABLED;
+		Accel[i].TCA_Num=i;
 	}
+	//swap TCA9548 4&7 and 5&6
+	Accel[4].TCA_Num=7;
+	Accel[5].TCA_Num=6;
+	Accel[6].TCA_Num=5;
+	Accel[7].TCA_Num=4;
 	//enable Accel[0]
 	//Accel[0].flags|=ACCEL_STATUS_ENABLED;
 		

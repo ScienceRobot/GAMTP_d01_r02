@@ -68,6 +68,7 @@ typedef struct {
 typedef struct {
     uint16_t    flags; //flags for accelerometer status
     uint8_t     I2CAddress; //I2C Address- multiple accelerometers can be on 1 I2C bus
+	uint8_t		TCA_Num; //which TCA9548 this accel i2c is on
     uint32_t    I2CBus; //which I2CBus this accelerometer uses (=I2C1,I2C2, etc.)
     volatile unsigned int *PowerPort; //port with the pin that powers the accelerometer
     uint32_t PowerPinMask; //used to set/reset pin used to power accelerometers on the PowerPort 0x0080=portpin7
